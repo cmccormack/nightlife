@@ -34,6 +34,13 @@ module.exports = (env={}) => {
             loader: "babel-loader",
           },
         },
+        {
+          test: /\.(png|ico|jpe?g|gif)$/i,
+          use: [
+            "file-loader?name=images/[name].[ext]",
+            "image-webpack-loader",
+          ],
+        },
       ],
     },
     plugins: [

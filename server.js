@@ -21,7 +21,7 @@ app.set("port", process.env.PORT || 3000)
 
 // Serve static files
 app.use(express.static(path.join(__dirname, "public")))
-// app.use(favicon(path.resolve(__dirname, "public", "images", "favicon.ico")))
+app.use(favicon(path.resolve(__dirname, "public", "images", "favicon.ico")))
 
 // Body parsing - parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false, }))
@@ -36,7 +36,8 @@ app.use(cors())
 ///////////////////////////////////////////////////////////
 //  Import Express Routes and call with Express app
 ///////////////////////////////////////////////////////////
-require("./routes/routes.js")(app)
+const routes = require("./routes/routes.js")
+routes(app)
 
 
 ///////////////////////////////////////////////////////////
