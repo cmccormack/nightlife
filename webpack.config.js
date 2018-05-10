@@ -1,0 +1,47 @@
+const path = require("path")
+const CleanWebpackPlugin = require("clean-webpack-plugin")
+const HtmlWebpackPlugin = require("html-webpack-plugin")
+
+module.exports = (env={}) => {
+  console.info(`webpack env: ${JSON.stringify(env)}`)
+
+  return {
+
+    mode: env.production ? "production" : "development",
+    context: path.join(__dirname, "./"),
+    entry: {
+      app: "./src/index.js",
+    },
+    output: {
+      path: path.resolve(__dirname, "dist"),
+      publicPath: "./",
+      filename: "[name].bundle.js",
+    },
+    resolve: {
+      alias: {
+        "react": "preact-compat",
+        "react-dom": "preact-compat",
+      },
+      extensions: [".js", ".jsx",],
+    },
+    module: {
+      rules: [
+        {
+          test: /\.jsx?$/,
+          exclude: /node_modules/,
+          use: {
+            loader: "babel-loader",
+          },
+        },
+      ],
+    },
+    plugins: [
+      new CleanWebpackPlugin(["dist", "build",], { verbose: true, }),
+      new HtmlWebpackPlugin({
+        inject: "body",
+        template: "./src/index.html",
+      }),
+    ],
+  }
+
+}
