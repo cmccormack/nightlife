@@ -1,6 +1,7 @@
 const path = require("path")
 const CleanWebpackPlugin = require("clean-webpack-plugin")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
+const CompressionPlugin = require("compression-webpack-plugin")
 
 module.exports = (env={}) => {
   console.info(`webpack env: ${JSON.stringify(env)}`)
@@ -13,8 +14,8 @@ module.exports = (env={}) => {
       app: "./src/index.js",
     },
     output: {
-      path: path.resolve(__dirname, "dist"),
-      publicPath: "./",
+      path: path.resolve(__dirname, "public"),
+      publicPath: "/",
       filename: "[name].bundle.js",
     },
     resolve: {
@@ -36,7 +37,8 @@ module.exports = (env={}) => {
       ],
     },
     plugins: [
-      new CleanWebpackPlugin(["dist", "build",], { verbose: true, }),
+      new CleanWebpackPlugin(["dist", "build", "public",], { verbose: true, }),
+      new CompressionPlugin(),
       new HtmlWebpackPlugin({
         inject: "body",
         template: "./src/index.html",

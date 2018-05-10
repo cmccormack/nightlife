@@ -4,12 +4,12 @@ import React, { Component, } from "react"
 class App extends Component {
 
   state = {
-    text: "Hello World",
+    text: "Page not loaded...",
   }
 
   componentDidMount() {
     this.setState({
-      text: "Loaded!",
+      text: "Page Loaded!",
     })
   }
 

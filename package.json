@@ -4,8 +4,10 @@
   "description": "FreeCodeCamp Nightlife Coordiation App",
   "main": "server.js",
   "scripts": {
+    "start": "npm run build && node server.js",
     "build": "webpack --mode production",
     "dev": "webpack --mode development",
+    "startdev": "nodemon --ignore src/ --ignore public/ server.js",
     "webpackdev": "webpack --mode development --watch"
   },
   "repository": {
@@ -30,8 +32,17 @@
   },
   "homepage": "https://github.com/cmccormack/nightlife#readme",
   "dependencies": {
+    "body-parser": "^1.18.2",
+    "connect-mongo": "^2.0.1",
+    "cors": "^2.8.4",
+    "dotenv": "^5.0.1",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "mongoose": "^5.0.18",
+    "passport": "^0.4.0",
     "preact": "^8.2.9",
     "preact-compat": "^3.18.0",
+    "serve-favicon": "^2.5.0",
     "webpack": "^4.8.1",
     "webpack-cli": "^2.1.3"
   },

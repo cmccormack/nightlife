@@ -12,7 +12,11 @@ module.exports = {
         "indent": [ "error", 2 ],
         "quotes": [ "error", "double" ],
         "semi": [ "error", "never" ],
-        "no-console": [ "error", { allow: ["warn", "error", "info"]} ],
+        "no-console": [
+            "error", {
+                allow: ["warn", "error", "info", "debug",]
+            }
+        ],
         "comma-dangle": ["error", "always"],
         "strict": 0,
     }
