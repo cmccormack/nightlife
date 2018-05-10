@@ -14,6 +14,26 @@ require("dotenv").config({path: path.resolve(__dirname, ".env"), })
 
 
 ///////////////////////////////////////////////////////////
+//  Configure and connect to MongoDB database
+///////////////////////////////////////////////////////////
+const dbconf = require("./db.js")
+mongoose.Promise = global.Promise
+mongoose
+  .connect(dbconf.url, dbconf.options)
+  .catch(({message,}) => {
+    console.error(`Unable to connect to the mongodb instance: ${message}`)
+  })
+
+const db = mongoose.connection
+db.on("error", ({message,}) => {
+  console.error(`Mongoose default connection error: ${message}`) 
+})
+db.once("open", () => {
+  console.info(`Mongoose default connection opened [${dbconf.db}]`)
+})
+
+
+///////////////////////////////////////////////////////////
 //  Initialize Express and configure Middleware
 ///////////////////////////////////////////////////////////
 const app = express()
