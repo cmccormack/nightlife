@@ -2,6 +2,20 @@ const path = require("path")
 const CleanWebpackPlugin = require("clean-webpack-plugin")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const CompressionPlugin = require("compression-webpack-plugin")
+const ExtractTextPlugin = require("extract-text-webpack-plugin")
+
+////////////////////////////////////
+// Configure environment settings
+////////////////////////////////////
+
+// CSS/SCSS
+const cssDev = ["style-loader", "css-loader", "sass-loader",]
+const cssProd = ExtractTextPlugin.extract({
+  fallback: "style-loader",
+  use: ["css-loader", "sass-loader",],
+  publicPath: "../",
+})
+
 
 module.exports = (env={}) => {
   console.info(`webpack env: ${JSON.stringify(env)}`)
@@ -19,10 +33,6 @@ module.exports = (env={}) => {
       filename: "[name].bundle.js",
     },
     resolve: {
-      alias: {
-        "react": "preact-compat",
-        "react-dom": "preact-compat",
-      },
       extensions: [".js", ".jsx",],
     },
     module: {
@@ -40,6 +50,14 @@ module.exports = (env={}) => {
             "file-loader?name=images/[name].[ext]",
             "image-webpack-loader",
           ],
+        },
+        {
+          test: /\.s?css$/,
+          use: env.production ? cssProd : cssDev,
+        },
+        {
+          test: /\.(woff|woff2|eot|ttf|svg)$/,
+          loader: "file-loader?name=fonts/[name].[ext]",
         },
       ],
     },
