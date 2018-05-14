@@ -12,7 +12,7 @@ module.exports = (app) => {
   ///////////////////////////////////////////////////////////
   app.use((req, res, next) => {
     const { user = { username: null, }, } = req
-    console.debug(`DEBUG path: ${req.path}`)
+    console.debug(`DEBUG path: ${req.hostname + req.path}`)
     next()
   })
 
@@ -21,7 +21,7 @@ module.exports = (app) => {
   // Default Route Handler, Loads React App
   ///////////////////////////////////////////////////////////
   app.get("*", (req, res) => {
-    console.info(`Default Route Handler for ${req.hostname + req.path}`)
+    console.info(`Default ('*') Route Handler for ${req.hostname + req.path}`)
     res.sendFile(path.join(publicPath, "index.html"))
   })
 
