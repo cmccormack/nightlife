@@ -1,9 +1,9 @@
-import React, { Component, } from "react"
+import React from "react"
 import PropTypes from "prop-types"
 import AppBar from "@material-ui/core/AppBar"
 import Toolbar from "@material-ui/core/Toolbar"
 import Typography from "@material-ui/core/Typography"
-import { withStyles, } from "@material-ui/core/styles"
+import withStyles from "@material-ui/core/styles/withStyles"
 
 const styles = {
   root: {
@@ -15,13 +15,13 @@ const styles = {
   },
 }
 
-class Footer extends Component {
+class Footer extends React.Component {
 
   render() {
     const { children, classes, items, } = this.props
     
     return (
-      <header>
+      <footer>
         <div className={ classes.root }>
           <AppBar position="static">
             <Toolbar>
@@ -38,7 +38,7 @@ class Footer extends Component {
             </Toolbar>
           </AppBar>
         </div>
-      </header>
+      </footer>
     )
   }
 }

@@ -2,27 +2,16 @@ const path = require("path")
 const CleanWebpackPlugin = require("clean-webpack-plugin")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const CompressionPlugin = require("compression-webpack-plugin")
-const ExtractTextPlugin = require("extract-text-webpack-plugin")
-
-////////////////////////////////////
-// Configure environment settings
-////////////////////////////////////
-
-// CSS/SCSS
-const cssDev = ["style-loader", "css-loader", "sass-loader",]
-const cssProd = ExtractTextPlugin.extract({
-  fallback: "style-loader",
-  use: ["css-loader", "sass-loader",],
-  publicPath: "../",
-})
+const Visualizer = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
 
 
-module.exports = (env={}) => {
-  console.info(`webpack env: ${JSON.stringify(env)}`)
+
+module.exports = env => {
+  console.info(`webpack env: ${env.prod ? "production" : "development"}`)
 
   return {
 
-    mode: env.production ? "production" : "development",
+    mode: env.prod ? "production" : "development",
     context: path.join(__dirname, "./"),
     entry: {
       app: "./src/index.js",
@@ -38,7 +27,7 @@ module.exports = (env={}) => {
     module: {
       rules: [
         {
-          test: /\.jsx?$/,
+          test: /\.jsx?$/i,
           exclude: /node_modules/,
           use: {
             loader: "babel-loader",
@@ -52,15 +41,16 @@ module.exports = (env={}) => {
           ],
         },
         {
-          test: /\.s?css$/,
-          use: env.production ? cssProd : cssDev,
+          test: /\.s?css$/i,
+          use: ["style-loader", "css-loader", "sass-loader",],
         },
         {
-          test: /\.(woff|woff2|eot|ttf|svg)$/,
+          test: /\.(woff|woff2|eot|ttf|svg)$/i,
           loader: "file-loader?name=fonts/[name].[ext]",
         },
       ],
     },
+    devtool: "source-map",
     plugins: [
       new CleanWebpackPlugin(["dist", "build", "public",], { verbose: true, }),
       new CompressionPlugin(),
@@ -68,6 +58,7 @@ module.exports = (env={}) => {
         inject: "body",
         template: "./src/index.html",
       }),
+      new Visualizer(),
     ],
   }
 

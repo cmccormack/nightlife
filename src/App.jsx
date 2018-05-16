@@ -1,22 +1,20 @@
-import React, { Component, } from "react"
+import React from "react"
 import PropTypes from "prop-types"
 import { injectGlobal, } from "styled-components"
 import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider"
 import blueGrey from "@material-ui/core/colors/blueGrey"
 import IconButton from "@material-ui/core/IconButton"
-import { AccountCircle, } from "@material-ui/icons"
-import { withStyles, } from "@material-ui/core/styles"
+import AccountCircle from "@material-ui/icons/AccountCircle"
+import withStyles from "@material-ui/core/styles/withStyles"
 import FontAwesomeIcon from "@fortawesome/react-fontawesome"
-import {
-  faFacebookF, 
-  faTwitter,
-  faLinkedinIn,
-  faGithubAlt,
-} from "@fortawesome/fontawesome-free-brands"
+import faFacebookF from "@fortawesome/fontawesome-free-brands/faTwitter"
+import faTwitter from "@fortawesome/fontawesome-free-brands/faFacebookF"
+import faLinkedinIn from "@fortawesome/fontawesome-free-brands/faLinkedinIn"
+import faGithubAlt from "@fortawesome/fontawesome-free-brands/faGithubAlt"
 
 import theme from "./theme"
 import { Header, Footer, } from "./views/layout"
-import { Typography, } from "@material-ui/core"
+import Typography from "@material-ui/core/Typography"
 
 
 injectGlobal`
@@ -63,7 +61,7 @@ const globalOptions = {
   },
 }
 
-class App extends Component {
+class App extends React.Component {
 
   state = {
     text: "Page not loaded...",
@@ -106,7 +104,6 @@ class App extends Component {
               >
                 <FontAwesomeIcon
                   icon={ item.icon }
-                  // fontSize="1.2 rem"
                 />
               </IconButton>
             ))}
