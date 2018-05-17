@@ -14,12 +14,15 @@ import faGithubAlt from "@fortawesome/fontawesome-free-brands/faGithubAlt"
 
 import theme from "./theme"
 import { Header, Footer, } from "./views/layout"
+import Main from "./views/components/Main"
 import Typography from "@material-ui/core/Typography"
 
 
 injectGlobal`
   body {
     background-color: ${blueGrey[100]};
+    margin: 0;
+    padding: 0;
   }
 `
 
@@ -67,6 +70,10 @@ class App extends React.Component {
     text: "Page not loaded...",
   }
 
+  propTypes = {
+    classes: PropTypes.object.isRequired,
+  }
+
   componentDidMount() {
     this.setState({
       text: "Page Loaded!",
@@ -91,9 +98,11 @@ class App extends React.Component {
               </IconButton>,
             ]}
           />
-          <main className={classes.main}>
-            <h1>{this.state.text}</h1>
-          </main>
+          <Main
+            className={ classes.main }
+          >
+            { this.state.text }
+          </Main>
           <Footer
             items={globalOptions.footer.socialIcons.map(item => (
               <IconButton
@@ -126,10 +135,6 @@ class App extends React.Component {
       </MuiThemeProvider>
     )
   }
-}
-
-App.propTypes = {
-  classes: PropTypes.object.isRequired,
 }
 
 export default withStyles(styles)(App)
