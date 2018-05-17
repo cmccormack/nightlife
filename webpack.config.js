@@ -1,5 +1,6 @@
 const path = require("path")
 const CleanWebpackPlugin = require("clean-webpack-plugin")
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const CompressionPlugin = require("compression-webpack-plugin")
 const Visualizer = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
@@ -41,8 +42,12 @@ module.exports = env => {
           ],
         },
         {
-          test: /\.s?css$/i,
-          use: ["style-loader", "css-loader", "sass-loader",],
+          test: /\.s?[ac]ss$/i,
+          use: [
+            env.prod ? MiniCssExtractPlugin.loader : "style-loader",
+            "css-loader",
+            "sass-loader",
+          ],
         },
         {
           test: /\.(woff|woff2|eot|ttf|svg)$/i,
@@ -57,6 +62,10 @@ module.exports = env => {
       new HtmlWebpackPlugin({
         inject: "body",
         template: "./src/index.html",
+      }),
+      new MiniCssExtractPlugin({
+        filename: "[name].css",
+        chunFilename: "[id].css",
       }),
       new Visualizer(),
     ],
