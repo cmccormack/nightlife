@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin")
 const CompressionPlugin = require("compression-webpack-plugin")
 const Visualizer = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
 
-
+const showVisualizer = false
 
 module.exports = env => {
   console.info(`webpack env: ${env.prod ? "production" : "development"}`)
@@ -67,8 +67,7 @@ module.exports = env => {
         filename: "[name].css",
         chunFilename: "[id].css",
       }),
-      new Visualizer(),
-    ],
+      showVisualizer && new Visualizer(),
+    ].filter(_=>_),
   }
-
 }
