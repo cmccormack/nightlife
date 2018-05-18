@@ -2,7 +2,6 @@ import React from "react"
 import PropTypes from "prop-types"
 import { injectGlobal, } from "styled-components"
 import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider"
-import blueGrey from "@material-ui/core/colors/blueGrey"
 import IconButton from "@material-ui/core/IconButton"
 import AccountCircle from "@material-ui/icons/AccountCircle"
 import withStyles from "@material-ui/core/styles/withStyles"
@@ -20,7 +19,6 @@ import Typography from "@material-ui/core/Typography"
 
 injectGlobal`
   body {
-    background-color: ${blueGrey[100]};
     margin: 0;
     padding: 0;
   }
@@ -31,6 +29,7 @@ const styles = {
     display: "flex",
     minHeight: "100vh",
     flexDirection: "column",
+    backgroundColor: theme.palette.background.default,
   },
   main: {
     flex: "1 0 auto",
@@ -70,7 +69,7 @@ class App extends React.Component {
     text: "Page not loaded...",
   }
 
-  propTypes = {
+  static propTypes = {
     classes: PropTypes.object.isRequired,
   }
 
@@ -83,7 +82,7 @@ class App extends React.Component {
 
   render() {
     const { classes, } = this.props
-
+    console.log(theme)
     return (
       <MuiThemeProvider theme={ theme }>
         <div className={classes.body}>
@@ -101,7 +100,7 @@ class App extends React.Component {
           <Main
             className={ classes.main }
           >
-            { this.state.text }
+            {/* Some stuff for main later  */}
           </Main>
           <Footer
             items={globalOptions.footer.socialIcons.map(item => (
