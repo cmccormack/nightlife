@@ -11,6 +11,7 @@ import faTwitter from "@fortawesome/fontawesome-free-brands/faFacebookF"
 import faLinkedinIn from "@fortawesome/fontawesome-free-brands/faLinkedinIn"
 import faGithubAlt from "@fortawesome/fontawesome-free-brands/faGithubAlt"
 
+import { AppProvider, } from "./views/contexts/AppContext"
 import theme from "./theme"
 import { Header, Footer, } from "./views/layout"
 import Main from "./views/components/Main"
@@ -84,54 +85,56 @@ class App extends React.Component {
     const { classes, } = this.props
     console.log(theme)
     return (
-      <MuiThemeProvider theme={ theme }>
-        <div className={classes.body}>
-          <Header
-            title="Meet Up Tonight"
-            items={[
-              <IconButton
-                color="inherit"
-                key="login"
-              >
-                <AccountCircle />
-              </IconButton>,
-            ]}
-          />
-          <Main
-            className={ classes.main }
-          >
-            {/* Some stuff for main later  */}
-          </Main>
-          <Footer
-            items={globalOptions.footer.socialIcons.map(item => (
-              <IconButton
-                href={item.href}
-                key={ item.icon.iconName }
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                <FontAwesomeIcon
-                  icon={ item.icon }
-                />
-              </IconButton>
-            ))}
-          >
-            <Typography
-              variant="body1"
+      <AppProvider>
+        <MuiThemeProvider theme={ theme }>
+          <div className={classes.body}>
+            <Header
+              title="Meet Up Tonight"
+              items={[
+                <IconButton
+                  color="inherit"
+                  key="login"
+                >
+                  <AccountCircle />
+                </IconButton>,
+              ]}
+            />
+            <Main
+              className={ classes.main }
             >
-              {"Created by "}
-              <a
-                className={classes.textLink}
-                href="https://mackville.net"
-                rel="noopener noreferrer"
-                target="_blank"
+              {/* Some stuff for main later  */}
+            </Main>
+            <Footer
+              items={globalOptions.footer.socialIcons.map(item => (
+                <IconButton
+                  href={item.href}
+                  key={ item.icon.iconName }
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <FontAwesomeIcon
+                    icon={ item.icon }
+                  />
+                </IconButton>
+              ))}
+            >
+              <Typography
+                variant="body1"
               >
-                {"Christopher McCormack"}
-              </a>
-            </Typography>
-          </Footer>
-        </div>
-      </MuiThemeProvider>
+                {"Created by "}
+                <a
+                  className={classes.textLink}
+                  href="https://mackville.net"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  {"Christopher McCormack"}
+                </a>
+              </Typography>
+            </Footer>
+          </div>
+        </MuiThemeProvider>
+      </AppProvider>
     )
   }
 }
