@@ -1,11 +1,15 @@
 const path = require("path")
+const express = require("express")
+
+// Setup Search Provider
+const searchProvider = require("./yelp")
+const searchRouter = express.Router()
 
 
 module.exports = (app) => {
 
   const root = path.resolve(__dirname, "..")
   const publicPath = path.join(root, "public")
-
 
   ///////////////////////////////////////////////////////////
   // Testing/Debug Middleware
@@ -15,6 +19,13 @@ module.exports = (app) => {
     console.debug(`DEBUG path: ${req.hostname + req.path}`)
     next()
   })
+
+
+  ///////////////////////////////////////////////////////////
+  // Search API
+  ///////////////////////////////////////////////////////////
+  searchProvider(searchRouter)
+  app.use("/api/search", searchRouter)
 
 
   ///////////////////////////////////////////////////////////

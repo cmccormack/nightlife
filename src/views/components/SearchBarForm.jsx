@@ -13,7 +13,7 @@ import GpsFixed from "@material-ui/icons/GpsFixed"
 import withStyles from "@material-ui/core/styles/withStyles"
 import cx from "classnames"
 
-import { AppConsumer, AppProvider, } from "../contexts/AppContext"
+import { AppConsumer, } from "../contexts/AppContext"
 
 
 const styles = theme => ({
@@ -54,8 +54,19 @@ class SearchBarForm extends React.Component {
       <Paper className={classes.paper}>
         <Grid container direction="row">
           <AppConsumer>
-            {({ handleLocationChange, location, }) => (
-              <form noValidate className={classes.searchBar}>
+            {({
+              handleGeolocate,
+              handleLocationChange,
+              handleLocationFormSubmit,
+              handleRequestLocation,
+              location,
+              locationFound,
+            }) => (
+              <form
+                className={classes.searchBar}
+                noValidate
+                onSubmit={handleLocationFormSubmit}
+              >
                 <Typography
                   variant="headline"
                   className={classes.headline}
@@ -76,10 +87,11 @@ class SearchBarForm extends React.Component {
                       <InputAdornment position="end">
                         <IconButton
                           aria-label="Request GPS Location"
-                          // onClick={this.handleClickShowPassword}
+                          onClick={handleGeolocate}
+                          disabled={ "navigator" in navigator }
                           // onMouseDown={this.handleMouseDownPassword}
                         >
-                          <GpsNotFixed />
+                          { locationFound ? <GpsFixed /> : <GpsNotFixed /> }
                         </IconButton>
                       </InputAdornment>
                     }
