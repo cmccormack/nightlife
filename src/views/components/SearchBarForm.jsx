@@ -58,9 +58,9 @@ class SearchBarForm extends React.Component {
               handleGeolocate,
               handleLocationChange,
               handleLocationFormSubmit,
-              handleRequestLocation,
               location,
               locationFound,
+              placeholder,
             }) => (
               <form
                 className={classes.searchBar}
@@ -80,6 +80,7 @@ class SearchBarForm extends React.Component {
                   <InputLabel htmlFor="adornment-gps">Location</InputLabel>
                   <Input
                     id="adornment-gps"
+                    placeholder={placeholder}
                     type="text"
                     value={location}
                     onChange={handleLocationChange}
