@@ -9,24 +9,26 @@ module.exports = app => {
 
   app.get("/", (req, res) => {
     const { query, } = req
-    const { location, term="", } = query
 
-
-    console.log(query)
     client.search({
-      term,
-      location,
+      ...query,
       sort_by: "distance",
     }).then(response => {
-      res.json({ success: true, query, response,})
+      res.json({
+        success: true,
+        query,
+        response,
+      })
     }).catch(err => {
+
       res.json({
         success: false,
-        error: JSON.parse(err.response.body),
-
+        query,
+        response: err 
+          ? err.response.body
+          : { code: "", description: "Unable to Access API",},
       })
     })
+
   })
-
-
 }
