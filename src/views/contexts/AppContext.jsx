@@ -1,6 +1,8 @@
 import React from "react"
 import PropTypes from "prop-types"
 
+import { toQueryString, } from "../../utils/queryparams"
+
 const AppContext = React.createContext("app")
 
 export const AppConsumer = AppContext.Consumer
@@ -10,27 +12,58 @@ export class AppProvider extends React.Component {
     isAuth: false,
     locationFound: false,
     location: "",
+    placeholder: "Enter your location",
     term: "night life",
   }
 
-  fetchSearchResults = params => {
-    const esc = encodeURIComponent
-    const query = Object.keys(params)
-      .map(k => esc(k) + "=" + esc(params[k]))
-      .join("&")
-
-    console.log(query)
-    fetch(`/api/search?${query}`)
-      .then(res => res.json())
-      .then(({response,}) => {
-        const { city, state, } = response.jsonBody.businesses[0].location
-        this.setState({location: `${city}, ${state}`,})
-      }).catch(console.error)
+  static propTypes = {
+    children: PropTypes.any,
   }
+
+
+  fetchSearchResults = (params, updateLocation=true) => {
+
+    const updateState = ({location="", locationFound, placeholder="",}) => {
+      this.setState(prevState => ({
+        location: updateLocation ? location : prevState.location,
+        locationFound: locationFound ? locationFound : prevState.locationFound,
+        placeholder,
+      }))
+    }
+
+    fetch(`/api/search?${toQueryString(params)}`)
+      .then(res => res.json())
+      .then(({response, success,}) => {
+
+        if (!success) {
+          switch(response.error.code) {
+            case "LOCATION_NOT_FOUND":
+              updateState({placeholder: "Location Not Found",})
+          }
+          return console.error(response.error.description)
+        }
+
+        if (response.jsonBody.businesses.length === 0) {
+          return updateState("No Results Found in Your Area")
+        }
+
+        const { city, state, } = response.jsonBody.businesses[0].location
+        updateState({
+          location: `${city}, ${state}`,
+        })
+
+      })
+      .catch(console.error)
+  }
+
 
   handleLocationChange = e => {
-    this.setState({ location: e.target.value, })
+    this.setState({
+      location: e.target.value,
+      placeholder: "Enter your location",
+    })
   }
+
 
   handleLocationFormSubmit = e => {
     e.preventDefault()
@@ -40,17 +73,16 @@ export class AppProvider extends React.Component {
 
   }
 
+
   handleGeolocate = e => {
     e.preventDefault()
     const { term, } = this.state
 
-    const handleSuccess = ({ coords: { latitude: lat, longitude: lon, },}) => {
-      const location = `${lat}, ${lon}`
+    const handleSuccess = ({ coords: { latitude, longitude, },}) => {
       this.setState({
-        location,
         locationFound: true,
       })
-      this.fetchSearchResults({ location, term,})
+      this.fetchSearchResults({ latitude, longitude, term,})
     }
 
     const handleFailure = error => {
@@ -60,13 +92,6 @@ export class AppProvider extends React.Component {
     navigator.geolocation.getCurrentPosition(handleSuccess, handleFailure)
   }
 
-  handleRequestLocation = () => {
-    this.setState({ locationFound: true, })
-  }
-
-  static propTypes = {
-    children: PropTypes.any,
-  }
 
   render() {
 
