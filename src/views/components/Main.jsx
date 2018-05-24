@@ -6,6 +6,7 @@ import withStyles from "@material-ui/core/styles/withStyles"
 import cx from "classnames"
 
 import SearchBarPage from "../containers/SearchBarPage"
+import SearchResultsPage from "../containers/SearchResultsPage"
 
 const styles = theme => ({
   main: {
@@ -34,7 +35,12 @@ class Main extends React.Component {
           justify="center"
           spacing={24}
         >
-          <SearchBarPage />
+          <Grid item xs={12}>
+            <SearchBarPage />
+          </Grid>
+          <Grid item xs={12}>
+            <SearchResultsPage />
+          </Grid>
         </Grid>
       </main>
     )
