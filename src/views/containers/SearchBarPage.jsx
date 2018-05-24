@@ -2,15 +2,13 @@ import React from "react"
 
 import SearchBarForm from "../components/SearchBarForm"
 
-class SearchBarPage extends React.Component {
+export default class SearchBarPage extends React.Component {
 
   render() {
 
     return (
-      <SearchBarForm>
+      <SearchBarForm {...this.props}>
       </SearchBarForm>
     )
   }
 }
-
-export default SearchBarPage
