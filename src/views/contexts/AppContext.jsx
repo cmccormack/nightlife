@@ -13,6 +13,7 @@ export class AppProvider extends React.Component {
     locationFound: false,
     location: "",
     placeholder: "Enter your location",
+    searchResults: [],
     term: "night life",
   }
 
@@ -23,11 +24,17 @@ export class AppProvider extends React.Component {
 
   fetchSearchResults = (params, updateLocation=true) => {
 
-    const updateState = ({location="", locationFound, placeholder="",}) => {
+    const updateState = ({
+      locationFound,
+      location="",
+      placeholder="",
+      ...rest
+    }) => {
       this.setState(prevState => ({
         location: updateLocation ? location : prevState.location,
-        locationFound: locationFound ? locationFound : prevState.locationFound,
+        locationFound: locationFound || prevState.locationFound,
         placeholder,
+        ...rest,
       }))
     }
 
@@ -50,7 +57,9 @@ export class AppProvider extends React.Component {
         const { city, state, } = response.jsonBody.businesses[0].location
         updateState({
           location: `${city}, ${state}`,
+          searchResults: response.jsonBody.businesses,
         })
+        console.log(response.jsonBody.businesses[0])
 
       })
       .catch(console.error)
