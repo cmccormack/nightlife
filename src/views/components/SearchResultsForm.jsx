@@ -2,6 +2,7 @@ import React from "react"
 import PropTypes from "prop-types"
 import Typography from "@material-ui/core/Typography"
 import Button from "@material-ui/core/Button"
+import ThumbUp from "@material-ui/icons/ThumbUp"
 import Card from "@material-ui/core/Card"
 import CardMedia from "@material-ui/core/CardMedia"
 import CardContent from "@material-ui/core/CardContent"
@@ -88,6 +89,13 @@ const styles = theme => ({
   },
   button: {
     flex: "1 0 auto",
+    margin: theme.spacing.unit,
+  },
+  rightIcon: {
+    marginLeft: theme.spacing.unit,
+  },
+  iconSmall: {
+    fontSize: 20,
   },
   buttons: {
     display: "flex",
@@ -96,7 +104,6 @@ const styles = theme => ({
     [theme.breakpoints.down("sm")]: {
       flexDirection: "row",
       width: "100%",
-      height: 40,
     },
     order: 2,
   },
@@ -198,9 +205,8 @@ class SearchResultsForm extends React.Component {
                               className={classes.button}
                               variant="outlined"
                             >
-                              <Typography variant="button">
-                                {"I Want To Go!"}
-                              </Typography>
+                              {"I Want To Go!"}
+                              <ThumbUp className={cx(classes.rightIcon, classes.iconSmall)}>thumbs_up</ThumbUp>
                             </Button>
                           </div>
                         </div>
