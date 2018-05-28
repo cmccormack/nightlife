@@ -58,6 +58,7 @@
     "material-ui": "^1.0.0-beta.47",
     "mongoose": "^5.1.1",
     "passport": "^0.4.0",
+    "passport-twitter": "^1.0.4",
     "preact": "^8.2.9",
     "preact-compat": "^3.18.0",
     "prop-types": "^15.6.1",
