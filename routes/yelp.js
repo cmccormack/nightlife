@@ -1,13 +1,14 @@
+const router = require("express").Router()
 const path = require("path")
-require("dotenv").config({ path: path.resolve(__dirname, ".env"), })
 const yelp = require("yelp-fusion")
+require("dotenv").config({ path: path.resolve(__dirname, ".env"), })
 
 const { yelpKey, } = process.env
 const client = yelp.client(yelpKey)
 
-module.exports = app => {
+module.exports = () => {
 
-  app.get("/", (req, res) => {
+  router.get("/", (req, res) => {
     const { query, } = req
 
     client.search({
@@ -29,6 +30,7 @@ module.exports = app => {
           : { code: "", description: "Unable to Access API",},
       })
     })
-
   })
+
+  return router
 }
