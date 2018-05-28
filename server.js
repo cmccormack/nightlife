@@ -52,12 +52,26 @@ app.use(bodyParser.json())
 // Handle cross-site request
 app.use(cors())
 
+// Initialize Passport and enable persistent login sessions stored in mongodb
+const sessionOptions = {
+  secret: "cmccormack-nightlife-app",
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false, },
+  store: new MongoStore({ mongooseConnection: db, }),
+}
+app.use(session(sessionOptions))
+app.use(passport.initialize())
+app.use(passport.session())
+
+require("./passport/init")(app, passport)
+require("./passport/twitter")(app, passport)
+
 
 ///////////////////////////////////////////////////////////
 //  Import Express Routes and call with Express app
 ///////////////////////////////////////////////////////////
-const routes = require("./routes/routes.js")
-routes(app)
+require("./routes/routes.js")(app, passport)
 
 
 ///////////////////////////////////////////////////////////
