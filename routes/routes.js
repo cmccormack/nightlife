@@ -1,22 +1,23 @@
 const path = require("path")
 const express = require("express")
 
-// Setup Search Provider
-const searchProvider = require("./yelp")
-const searchRouter = express.Router()
-
-
-module.exports = (app) => {
+module.exports = (app, passport) => {
 
   const root = path.resolve(__dirname, "..")
   const publicPath = path.join(root, "public")
+
+  ///////////////////////////////////////////////////////////
+  // Setup Additional Routers
+  ///////////////////////////////////////////////////////////
+  const searchRouter = require("./yelp")()
+  const authRouter = require("./twitter")(passport)
 
   ///////////////////////////////////////////////////////////
   // Testing/Debug Middleware
   ///////////////////////////////////////////////////////////
   app.use((req, res, next) => {
     const { user = { username: null, }, } = req
-    console.debug(`DEBUG path: ${req.hostname + req.path}`)
+    console.debug(`DEBUG originalUrl: ${req.originalUrl}`)
     next()
   })
 
@@ -24,16 +25,30 @@ module.exports = (app) => {
   ///////////////////////////////////////////////////////////
   // Search API
   ///////////////////////////////////////////////////////////
-  searchProvider(searchRouter)
   app.use("/api/search", searchRouter)
 
 
   ///////////////////////////////////////////////////////////
-  // Default Route Handler, Loads React App
+  // Auth API
+  ///////////////////////////////////////////////////////////
+  app.use("/auth", authRouter)
+
+
+  ///////////////////////////////////////////////////////////
+  // Root Router Handler, Serves React App
+  ///////////////////////////////////////////////////////////
+  app.get("/", (req, res) => {
+    console.info(`Main Route Handler used for ${req.hostname + req.path}`)
+    res.sendFile(path.join(publicPath, "index.html"))
+  })
+
+
+  ///////////////////////////////////////////////////////////
+  // Default Route Handler, Redirects to root
   ///////////////////////////////////////////////////////////
   app.get("*", (req, res) => {
-    console.info(`Default ('*') Route Handler for ${req.hostname + req.path}`)
-    res.sendFile(path.join(publicPath, "index.html"))
+    console.info(`Default Route Handler used for ${req.hostname + req.path}`)
+    res.redirect("/")
   })
 
 
