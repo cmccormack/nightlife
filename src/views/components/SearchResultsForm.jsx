@@ -3,6 +3,8 @@ import PropTypes from "prop-types"
 import Typography from "@material-ui/core/Typography"
 import Button from "@material-ui/core/Button"
 import ThumbUp from "@material-ui/icons/ThumbUp"
+import Star from "@material-ui/icons/Star"
+import LocationOn from "@material-ui/icons/LocationOn"
 import Card from "@material-ui/core/Card"
 import CardMedia from "@material-ui/core/CardMedia"
 import CardContent from "@material-ui/core/CardContent"
@@ -85,17 +87,22 @@ const styles = theme => ({
   buttonWrapper: {
     display: "flex",
     flex: "1 0 auto",
-    padding: ".4rem",
   },
   button: {
     flex: "1 0 auto",
     margin: theme.spacing.unit,
+    border: "2px solid orange",
+    borderColor: theme.palette.secondary.light,
   },
   rightIcon: {
     marginLeft: theme.spacing.unit,
   },
   iconSmall: {
     fontSize: 20,
+  },
+  icons: {
+    fontSize: "14px",
+    float: "left",
   },
   buttons: {
     display: "flex",
@@ -110,11 +117,10 @@ const styles = theme => ({
   media: {
     flex: "0 1 auto",
     width: 250,
-    height: 120,
     order: 0,
     [theme.breakpoints.down("sm")]: {
       width: "100%",
-      paddingTop: "10%",
+      paddingTop: "40%",
     },
   },
   paper: {
@@ -161,6 +167,7 @@ class SearchResultsForm extends React.Component {
                   categories,
                   id,
                   image_url,
+                  location,
                   name,
                   rating,
                 }) => {
@@ -181,10 +188,13 @@ class SearchResultsForm extends React.Component {
                             {name}
                           </Typography>
                           <Typography variant="body1">
-                            {description}
+                            <em>{description}</em>
+                          </Typography>
+                          <Typography variant="body1">
+                            <LocationOn className={classes.icons}>location_on</LocationOn>{location.display_address.join(" ")}
                           </Typography>
                           <Typography variant="caption">
-                            Rating: {rating}
+                            <Star className={classes.icons}></Star>{rating}
                           </Typography>
                   
                         </CardContent>
