@@ -14,7 +14,7 @@ export class AppProvider extends React.Component {
     location: "",
     placeholder: "Enter your location",
     searchResults: [],
-    term: "night life",
+    term: "nightlife",
   }
 
   static propTypes = {
