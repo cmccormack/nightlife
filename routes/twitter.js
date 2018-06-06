@@ -6,9 +6,14 @@ module.exports = (passport) => {
 
   router.get("/twitter/callback",
     passport.authenticate("twitter", {
+      failureRedirect: "/auth/twitter/fail",
       successRedirect: "/",
-      failureRedirect: "/login",
-    }))
+    })
+  )
+
+  router.get("/twitter/fail", (req, res, next) => {
+    res.send("<h1>Failed to Log in to Twitter</h1>")
+  })
 
   return router
 }
