@@ -9,7 +9,7 @@ export const AppConsumer = AppContext.Consumer
 export class AppProvider extends React.Component {
 
   state = {
-    isAuth: false,
+    loggedIn: false,
     locationFound: false,
     location: "",
     placeholder: "Enter your location",
@@ -55,11 +55,11 @@ export class AppProvider extends React.Component {
         }
 
         const { city, state, } = response.jsonBody.businesses[0].location
+        console.log(response.jsonBody.businesses[0])
         updateState({
           location: `${city}, ${state}`,
           searchResults: response.jsonBody.businesses,
         })
-        console.log(response.jsonBody.businesses[0])
 
       })
       .catch(console.error)
@@ -101,6 +101,25 @@ export class AppProvider extends React.Component {
     navigator.geolocation.getCurrentPosition(handleSuccess, handleFailure)
   }
 
+  fetchJSON = async (path, method) => {
+    return await fetch(
+      "/isauth",
+      {
+        method,
+        credentials: "include",
+      }
+    ).then(res => res.json())
+  }
+
+
+  handleValidateAuth = async () => {
+    const {isauth,} = await this.fetchJSON("/isauth", "GET")
+
+    this.setState({
+      loggedIn: isauth,
+    })
+  }
+
 
   render() {
 
@@ -112,10 +131,30 @@ export class AppProvider extends React.Component {
           handleLocationChange: this.handleLocationChange,
           handleLocationFormSubmit: this.handleLocationFormSubmit,
           handleRequestLocation: this.handleRequestLocation,
+          handleValidateAuth: this.handleValidateAuth,
         }}
       >
         { this.props.children }
       </AppContext.Provider>
+    )
+  }
+}
+
+
+export function withAuth(Component) {
+  return function AuthComponent(props) {
+    return(
+      <AppConsumer>
+        {
+          ({ loggedIn, handleValidateAuth, }) => (
+            <Component
+              loggedIn={loggedIn}
+              handleValidateAuth={handleValidateAuth}
+              {...props}
+            />
+          )
+        }
+      </AppConsumer>
     )
   }
 }
