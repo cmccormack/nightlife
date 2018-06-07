@@ -34,6 +34,10 @@ module.exports = (app, passport) => {
   ///////////////////////////////////////////////////////////
   app.use("/auth", authRouter)
 
+  app.get("/isauth", (req, res, next) => {
+    res.json({ isauth: req.isAuthenticated(), })
+  })
+
 
   ///////////////////////////////////////////////////////////
   // Root Router Handler, Serves React App
