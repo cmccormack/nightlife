@@ -64,8 +64,8 @@ app.use(session(sessionOptions))
 app.use(passport.initialize())
 app.use(passport.session())
 
-require("./passport/init")(app, passport)
-require("./passport/twitter")(app, passport)
+require("./auth/init")(app, passport)
+require("./auth/twitter")(app, passport)
 
 
 ///////////////////////////////////////////////////////////
