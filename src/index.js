@@ -3,5 +3,11 @@ import ReactDOM from "react-dom"
 
 import App from "./App"
 import "./images/favicon.ico"
+import { AppProvider, } from "./views/contexts/AppContext"
 
-ReactDOM.render( <App/> , document.getElementById("root"))
+ReactDOM.render(
+  <AppProvider>
+    <App/>
+  </AppProvider>,
+  document.getElementById("root")
+)
