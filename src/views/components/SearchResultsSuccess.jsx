@@ -4,16 +4,18 @@ import Typography from "@material-ui/core/Typography"
 import Button from "@material-ui/core/Button"
 import ThumbUp from "@material-ui/icons/ThumbUp"
 import Star from "@material-ui/icons/Star"
+import StarHalf from "@material-ui/icons/StarHalf"
 import LocationOn from "@material-ui/icons/LocationOn"
 import Card from "@material-ui/core/Card"
 import CardMedia from "@material-ui/core/CardMedia"
 import CardContent from "@material-ui/core/CardContent"
-import Paper from "@material-ui/core/Paper"
 import Grid from "@material-ui/core/Grid"
 import withStyles from "@material-ui/core/styles/withStyles"
 import cx from "classnames"
 
+import { withAuth, } from "../contexts/AppContext"
 import "../../images/placeholder.jpg"
+
 
 const styles = theme => ({
   card: {
@@ -32,12 +34,6 @@ const styles = theme => ({
     display: "flex",
     flex: "1 0 auto",
   },
-  button: {
-    flex: "1 0 auto",
-    margin: theme.spacing.unit,
-    border: "2px solid orange",
-    borderColor: theme.palette.secondary.light,
-  },
   rightIcon: {
     marginLeft: theme.spacing.unit,
   },
@@ -45,8 +41,15 @@ const styles = theme => ({
     fontSize: 20,
   },
   icons: {
-    fontSize: "14px",
+    fontSize: "16px",
     float: "left",
+  },
+  star: {
+    color: "gold",
+    fontSize: "16px",
+  },
+  pin: {
+    color: "#dd4c40",
   },
   buttons: {
     display: "flex",
@@ -57,6 +60,12 @@ const styles = theme => ({
       width: "100%",
     },
     order: 2,
+  },
+  button: {
+    flex: "1 0 auto",
+    margin: theme.spacing.unit,
+    border: "2px solid",
+    borderColor: theme.palette.secondary.light,
   },
   media: {
     flex: "0 1 auto",
@@ -81,12 +90,30 @@ const styles = theme => ({
   textField: {
     flexBasis: 450,
   },
+  textLink: {
+    textDecoration: "none",
+    color: "inherit",
+    "&:hover": {
+      textDecoration: "underline",
+    },
+  },
+  titleText: {
+    color: theme.palette.secondary.light,
+  },
 })
 
 
-const SearchResultsSuccess = ({classes, searchResults,}) => {
+const SearchResultsSuccess = ({
+  classes,
+  loggedIn,
+  searchResults,
+}) => {
 
   const placeholderImage = "/images/placeholder.jpg"
+
+  const getMapUrl = (address) => (
+    `https://www.google.com/maps/place/${address}`
+  )
 
   return(
     <Grid container direction="row">
@@ -104,14 +131,17 @@ const SearchResultsSuccess = ({classes, searchResults,}) => {
           location,
           name,
           rating,
+          url,
         }) => {
+
           const description = categories.map(c => c.title).join(", ")
+
           return (
             <Grid item xs={12} key={id}>
               <Card
                 className={cx(classes.margin, classes.card)}
                 elevation={1}
-              >{console.log(image_url || placeholderImage)}
+              >
                 <CardMedia
                   className={classes.media}
                   image={image_url || placeholderImage}
@@ -119,17 +149,50 @@ const SearchResultsSuccess = ({classes, searchResults,}) => {
                 />
                 <CardContent className={classes.content}>
                   <Typography variant="title">
-                    {name}
+                    <a
+                      className={cx(classes.textLink, classes.titleText)}
+                      href={url}
+                      rel="noreferrer noopener"
+                      target={"_blank"}
+                    >
+                      {name}
+                    </a>
                   </Typography>
                   <Typography variant="body1">
                     <em>{description}</em>
                   </Typography>
                   <Typography variant="body1">
-                    <LocationOn className={classes.icons}>location_on</LocationOn>{location.display_address.join(" ")}
+                    <a 
+                      className={classes.textLink}
+                      href={getMapUrl(
+                        location.display_address.map(
+                          _=>_.split(" ").join("+")
+                        ).join("+")
+                      )}
+                      rel="noreferrer noopener"
+                      target={"_blank"}
+                    >
+                      <LocationOn className={cx(classes.icons, classes.pin)}>
+                        location_on
+                      </LocationOn>
+                      {location.display_address.join(" ")}
+                    </a>
                   </Typography>
-                  <Typography variant="caption">
-                    <Star className={classes.icons}></Star>{rating}
-                  </Typography>
+                  {
+                    Array(Math.floor(rating)).fill("").map((v,i) => (
+                      <Star
+                        className={cx(classes.icons, classes.star)}
+                        key={i}
+                      />
+                    ))
+                  }
+                  {
+                    rating % 1 > 0 && (
+                      <StarHalf
+                        className={cx(classes.icons, classes.star)}
+                      />
+                    )
+                  }
 
                 </CardContent>
                 <div className={classes.buttons}>
@@ -145,12 +208,18 @@ const SearchResultsSuccess = ({classes, searchResults,}) => {
                     </Button>
                   </div>
                   <div className={classes.buttonWrapper}>
+                    {console.log("SearchResultsSuccess: loggedIn: " + loggedIn)}
                     <Button
                       className={classes.button}
                       variant="outlined"
+                      disabled={!loggedIn}
                     >
                       {"I Want To Go!"}
-                      <ThumbUp className={cx(classes.rightIcon, classes.iconSmall)}>thumbs_up</ThumbUp>
+                      <ThumbUp
+                        className={cx(classes.rightIcon, classes.iconSmall)}
+                      >
+                        {"thumbs_up"}
+                      </ThumbUp>
                     </Button>
                   </div>
                 </div>
@@ -163,4 +232,14 @@ const SearchResultsSuccess = ({classes, searchResults,}) => {
   )
 }
 
-export default withStyles(styles)(SearchResultsSuccess)
+SearchResultsSuccess.propTypes = {
+  classes: PropTypes.object,
+  searchResults: PropTypes.array,
+}
+
+SearchResultsSuccess.defaultProps = {
+  classes: {},
+  searchResults: [],
+}
+
+export default withStyles(styles)(withAuth(SearchResultsSuccess))
