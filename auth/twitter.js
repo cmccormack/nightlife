@@ -13,7 +13,6 @@ module.exports = () => {
     {
       consumerKey: twitter_api_key,
       consumerSecret: twitter_secret,
-      callbackURL: "http://127.0.0.1:3000/auth/twitter/callback",
     },
     (token, tokenSecret, profile, done) => {
 
