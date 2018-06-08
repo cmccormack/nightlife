@@ -29,11 +29,9 @@ class HeaderContainer extends Component {
           </IconButton>,
         ]
         : [
-          null,
+          <a href="/auth/logout" key="logout">Log Out</a>,
         ]
     )
-
-    console.log("loggedIn: " + this.props.loggedIn)
     
     return (
       <HeaderForm
