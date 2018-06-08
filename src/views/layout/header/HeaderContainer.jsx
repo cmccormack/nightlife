@@ -16,13 +16,14 @@ class HeaderContainer extends Component {
 
     const title="Meet Up Tonight"
 
+    const { loggedIn, query, } = this.props
     const items = (
 
-      !this.props.loggedIn
+      !loggedIn
         ? [
           <IconButton
             color="inherit"
-            href="/auth/twitter"
+            href={`/auth/twitter${query}`}
             key="login"
           >
             <AccountCircle />
