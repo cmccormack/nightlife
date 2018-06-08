@@ -16,7 +16,12 @@ module.exports = () => {
     },
     (token, tokenSecret, profile, done) => {
 
-      const { id, username, displayName, } = profile
+      const {
+        id,
+        username,
+        displayName,
+        _json:{profile_image_url_https: profile_image,},
+      } = profile
 
       User.findOne({ "twitter.id": id, }).exec((err, user) => {
 
@@ -30,6 +35,7 @@ module.exports = () => {
             token,
             displayName,
             username,
+            profile_image,
           },
         })
 
