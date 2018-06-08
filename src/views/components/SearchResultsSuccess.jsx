@@ -65,7 +65,13 @@ const styles = theme => ({
     flex: "1 0 auto",
     margin: theme.spacing.unit,
     border: "2px solid",
+  },
+  gobutton: {
     borderColor: theme.palette.secondary.light,
+    backgroundColor: "#aa614a",
+    "&:hover": {
+      backgroundColor: theme.palette.secondary.light,
+    },
   },
   media: {
     flex: "0 1 auto",
@@ -198,7 +204,7 @@ const SearchResultsSuccess = ({
                 <div className={classes.buttons}>
                   <div className={classes.buttonWrapper}>
                     <Button
-                      className={classes.button}
+                      className={cx(classes.button, classes.goingbutton)}
                       disabled
                       variant="outlined"
                     >
@@ -209,7 +215,7 @@ const SearchResultsSuccess = ({
                   </div>
                   <div className={classes.buttonWrapper}>
                     <Button
-                      className={classes.button}
+                      className={cx(classes.button, classes.gobutton)}
                       variant="outlined"
                       disabled={!loggedIn}
                     >
@@ -233,6 +239,7 @@ const SearchResultsSuccess = ({
 
 SearchResultsSuccess.propTypes = {
   classes: PropTypes.object,
+  loggedIn: PropTypes.bool.isRequired,
   searchResults: PropTypes.array,
 }
 
