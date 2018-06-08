@@ -4,6 +4,8 @@ import AppBar from "@material-ui/core/AppBar"
 import Toolbar from "@material-ui/core/Toolbar"
 import Typography from "@material-ui/core/Typography"
 import withStyles from "@material-ui/core/styles/withStyles"
+import IconButton from "@material-ui/core/IconButton"
+import FontAwesomeIcon from "@fortawesome/react-fontawesome"
 
 const styles = {
   root: {
@@ -26,7 +28,18 @@ class Footer extends React.Component {
           <AppBar position="static">
             <Toolbar>
               <span className={classes.flex}>
-                { items }
+                {items.map(item => (
+                  <IconButton
+                    href={item.href}
+                    key={ item.icon.iconName }
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <FontAwesomeIcon
+                      icon={ item.icon }
+                    />
+                  </IconButton>
+                ))}
               </span>
               <Typography
                 className={ classes.flex }
