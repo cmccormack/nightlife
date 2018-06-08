@@ -6,10 +6,10 @@ import App from "./App"
 import "./images/favicon.ico"
 import { AppProvider, } from "./views/contexts/AppContext"
 
-const queryLocation = queryString.parse(location.search).location
+const query = !!location.search && queryString.parse(location.search)
 
 ReactDOM.render(
-  <AppProvider location={queryLocation}>
+  <AppProvider query={query}>
     <App/>
   </AppProvider>,
   document.getElementById("root")
