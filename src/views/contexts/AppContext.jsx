@@ -11,7 +11,7 @@ export class AppProvider extends React.Component {
   state = {
     loggedIn: false,
     locationFound: false,
-    location: "",
+    location: this.props.location,
     placeholder: "Enter your location",
     searchResults: [],
     term: "nightlife",
@@ -19,10 +19,32 @@ export class AppProvider extends React.Component {
 
   static propTypes = {
     children: PropTypes.any,
+    location: PropTypes.string,
+  }
+
+  static defaultProps = {
+    location: "",
+  }
+
+  componentDidMount() {
+    
+    const { location, term, } = this.state
+    this.state.location && this.fetchSearchResults({location, term,})
   }
 
 
-  fetchSearchResults = (params, updateLocation=true) => {
+  fetchJSON = (path, method="GET") => {
+    return fetch(
+      path,
+      {
+        method,
+        credentials: "include",
+      }
+    ).then(res => res.json())
+  }
+
+
+  fetchSearchResults = async (params, updateLocation=true) => {
 
     const updateState = ({
       locationFound,
@@ -38,32 +60,35 @@ export class AppProvider extends React.Component {
       }))
     }
 
-    fetch(`/api/search?${toQueryString(params)}`)
-      .then(res => res.json())
-      .then(({response, success,}) => {
+    const searchUrl = `/api/search?${toQueryString(params)}`
 
-        if (!success) {
-          switch(response.error.code) {
-            case "LOCATION_NOT_FOUND":
-              updateState({placeholder: "Location Not Found",})
-          }
-          return console.error(response.error.description)
+    try {
+      const { response, success, } = await this.fetchJSON(searchUrl)
+
+      if (!success) {
+        switch(response.error.code) {
+          case "LOCATION_NOT_FOUND":
+            updateState({placeholder: "Location Not Found",})
         }
+        return console.error(response.error.description)
+      }
 
-        if (response.jsonBody.businesses.length === 0) {
-          return updateState("No Results Found in Your Area")
-        }
+      if (response.jsonBody.businesses.length === 0) {
+        return updateState("No Results Found in Your Area")
+      }
 
-        const { city, state, } = response.jsonBody.businesses[0].location
-        console.log(response.jsonBody.businesses[0])
-        updateState({
-          location: `${city}, ${state}`,
-          searchResults: response.jsonBody.businesses,
-        })
-
+      const { city, state, } = response.jsonBody.businesses[0].location
+      updateState({
+        location: `${city}, ${state}`,
+        searchResults: response.jsonBody.businesses,
       })
-      .catch(console.error)
+
+      // Add the location to the query parameters
+      history.pushState({}, null, `/?location=${city},+${state}`)
+
+    } catch(error) { console.error }
   }
+
 
 
   handleLocationChange = e => {
@@ -99,16 +124,6 @@ export class AppProvider extends React.Component {
     }
 
     navigator.geolocation.getCurrentPosition(handleSuccess, handleFailure)
-  }
-
-  fetchJSON = async (path, method) => {
-    return await fetch(
-      "/isauth",
-      {
-        method,
-        credentials: "include",
-      }
-    ).then(res => res.json())
   }
 
 
