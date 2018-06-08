@@ -12,6 +12,10 @@ const styles = {
   flex: {
     flex: 1,
   },
+  textLink: {
+    textDecoration: "none",
+    color: "inherit",
+  },
 }
 
 class HeaderForm extends Component {
@@ -29,7 +33,9 @@ class HeaderForm extends Component {
                 color="inherit"
                 variant="title"
               >
-                { title }
+                <a href="/" className={classes.textLink}>
+                  { title }
+                </a>
               </Typography>
               { items.map(item => (
                 item
