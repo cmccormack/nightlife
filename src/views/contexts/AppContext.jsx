@@ -11,26 +11,28 @@ export class AppProvider extends React.Component {
   state = {
     loggedIn: false,
     locationFound: false,
-    location: this.props.location,
+    location: this.props.query.location,
     placeholder: "Enter your location",
     searchResults: [],
-    query: this.props.query || { term: "nightlife", },
+    query: this.props.query,
   }
 
   static propTypes = {
     children: PropTypes.any,
-    location: PropTypes.string,
+    query: PropTypes.object,
   }
 
   static defaultProps = {
     location: "",
+    query: { 
+      location: "",
+      term: "nightlife",
+    },
   }
 
   componentDidMount() {
-    console.log("query? ", !!this.props.query)
-    const { query, } = this.state
-    console.log("componentDidMount", query)
-    this.fetchSearchResults(query)
+    this.fetchSearchResults()
+    console.log(this.state.query)
   }
 
 
@@ -45,11 +47,11 @@ export class AppProvider extends React.Component {
   }
 
 
-  fetchSearchResults = async (params, updateLocation=true) => {
+  fetchSearchResults = async (params=this.state.query, updateLocation=true) => {
 
     if (!params["location"]) {
       if (!(params["latitude"] && params["longitude"])) {
-        console.log("fetchSearchResults returning early, params: ", params)
+        console.error("Must provide location or GPS coordinates")
         return
       }
     }
@@ -70,6 +72,7 @@ export class AppProvider extends React.Component {
       }))
     }
 
+    console.log(params)
     const searchUrl = `/api/search?${queryString.stringify(params)}`
 
     try {
@@ -123,8 +126,6 @@ export class AppProvider extends React.Component {
   handleGeolocate = async e => {
     e.preventDefault()
 
-    const { query: {term,}, } = this.state
-
     const handleSuccess = ({ coords: { latitude, longitude, },}) => {
 
       this.setState(prevState => ({
@@ -133,8 +134,8 @@ export class AppProvider extends React.Component {
           latitude: latitude.toFixed(2),
           longitude: longitude.toFixed(2),
         }, prevState.query),
-      }))
-      this.fetchSearchResults({ latitude, longitude, term,})
+      }), this.fetchSearchResults)
+      
     }
 
     const handleFailure = error => {
