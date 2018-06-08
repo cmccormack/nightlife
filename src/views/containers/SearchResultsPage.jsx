@@ -59,7 +59,7 @@ const styles = theme => ({
   paper: {
     flex: "1 0 auto",
     flexDirection: "column",
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing.unit * 5,
   },
 })
 
