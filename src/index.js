@@ -6,7 +6,7 @@ import App from "./App"
 import "./images/favicon.ico"
 import { AppProvider, } from "./views/contexts/AppContext"
 
-const query = !!location.search && queryString.parse(location.search)
+const query = location.search ? queryString.parse(location.search) : undefined
 
 ReactDOM.render(
   <AppProvider query={query}>
