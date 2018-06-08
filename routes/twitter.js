@@ -3,19 +3,26 @@ const router = require("express").Router()
 module.exports = (passport) => {
 
   router.get("/logout", (req, res, next) => {
-    console.log("Logging out user " + req.user)
     req.logout()
+    // res.json({ success: !req.isAuthenticated(), })
     res.redirect("/")
   })
 
-  router.get("/twitter", passport.authenticate("twitter"))
+  router.get("/twitter", (req, res, next) => {
+    const { location="", } = req.query
+    passport.authenticate("twitter", {
+      callbackURL: `/auth/twitter/callback?location=${location}`,
+    })(req, res, next)
+  })
 
-  router.get("/twitter/callback",
+  router.get("/twitter/callback", (req, res, next) => {
+    const { location="", } = req.query
     passport.authenticate("twitter", {
       failureRedirect: "/auth/twitter/fail",
-      successRedirect: "/",
-    })
-  )
+      successRedirect: `/?location=${location}`,
+    })(req, res, next)
+
+  })
 
   /* eslint no-unused-vars: 0 */
   router.get("/twitter/fail", (req, res, next) => {
