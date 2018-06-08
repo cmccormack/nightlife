@@ -1,7 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
 
-import { toQueryString, } from "../../utils/queryparams"
+import queryString from "query-string"
 
 const AppContext = React.createContext("app")
 
@@ -14,8 +14,7 @@ export class AppProvider extends React.Component {
     location: this.props.location,
     placeholder: "Enter your location",
     searchResults: [],
-    term: "nightlife",
-    query: "?",
+    query: this.props.query || { term: "nightlife", },
   }
 
   static propTypes = {
@@ -28,9 +27,10 @@ export class AppProvider extends React.Component {
   }
 
   componentDidMount() {
-    
-    const { location, term, } = this.state
-    this.state.location && this.fetchSearchResults({location, term,})
+    console.log("query? ", !!this.props.query)
+    const { query, } = this.state
+    console.log("componentDidMount", query)
+    this.fetchSearchResults(query)
   }
 
 
@@ -47,21 +47,30 @@ export class AppProvider extends React.Component {
 
   fetchSearchResults = async (params, updateLocation=true) => {
 
+    if (!params["location"]) {
+      if (!(params["latitude"] && params["longitude"])) {
+        console.log("fetchSearchResults returning early, params: ", params)
+        return
+      }
+    }
+
     const updateState = ({
       locationFound,
       location="",
       placeholder="",
+      query={},
       ...rest
     }) => {
       this.setState(prevState => ({
         location: updateLocation ? location : prevState.location,
         locationFound: locationFound || prevState.locationFound,
+        query: Object.assign(query, prevState.query),
         placeholder,
         ...rest,
       }))
     }
 
-    const searchUrl = `/api/search?${toQueryString(params)}`
+    const searchUrl = `/api/search?${queryString.stringify(params)}`
 
     try {
       const { response, success, } = await this.fetchJSON(searchUrl)
@@ -79,14 +88,15 @@ export class AppProvider extends React.Component {
       }
 
       const { city, state, } = response.jsonBody.businesses[0].location
-      updateState({
+      await updateState({
         location: `${city}, ${state}`,
         searchResults: response.jsonBody.businesses,
-        query: `?location=${city},+${state}`,
+        query: {location: `${city},+${state}`, },
       })
 
       // Add the location to the query parameters
-      history.pushState({}, null, `/?location=${city},+${state}`)
+      const { query, } = this.state
+      history.pushState({}, null, `/?${queryString.stringify(query)}`)
 
     } catch(error) { console.error }
   }
@@ -104,20 +114,26 @@ export class AppProvider extends React.Component {
   handleLocationFormSubmit = e => {
     e.preventDefault()
 
-    const { location, term, } = this.state
+    const { location, query: {term, },} = this.state
     this.fetchSearchResults({ location, term, })
 
   }
 
 
-  handleGeolocate = e => {
+  handleGeolocate = async e => {
     e.preventDefault()
-    const { term, } = this.state
+
+    const { query: {term,}, } = this.state
 
     const handleSuccess = ({ coords: { latitude, longitude, },}) => {
-      this.setState({
+
+      this.setState(prevState => ({
         locationFound: true,
-      })
+        query: Object.assign({
+          latitude: latitude.toFixed(2),
+          longitude: longitude.toFixed(2),
+        }, prevState.query),
+      }))
       this.fetchSearchResults({ latitude, longitude, term,})
     }
 
@@ -129,6 +145,7 @@ export class AppProvider extends React.Component {
   }
 
 
+  // Check server to see if user is authenticated
   handleValidateAuth = async () => {
     const {isauth,} = await this.fetchJSON("/isauth", "GET")
 
