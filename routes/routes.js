@@ -39,6 +39,12 @@ module.exports = (app, passport) => {
   })
 
 
+
+  app.get("/user", (req, res, next) => {
+    res.json(req.user.twitter)
+  })
+
+
   ///////////////////////////////////////////////////////////
   // Root Router Handler, Serves React App
   ///////////////////////////////////////////////////////////
