@@ -15,6 +15,7 @@ export class AppProvider extends React.Component {
     placeholder: "Enter your location",
     searchResults: [],
     term: "nightlife",
+    query: "?",
   }
 
   static propTypes = {
@@ -81,6 +82,7 @@ export class AppProvider extends React.Component {
       updateState({
         location: `${city}, ${state}`,
         searchResults: response.jsonBody.businesses,
+        query: `?location=${city},+${state}`,
       })
 
       // Add the location to the query parameters
@@ -133,6 +135,18 @@ export class AppProvider extends React.Component {
     this.setState({
       loggedIn: isauth,
     })
+
+    return isauth
+  }
+
+  getUserDetails = async () => {
+
+    if (!this.state.loggedIn) return
+
+    const user = await this.fetchJSON("/user")
+    this.setState({ user, })
+
+    return user
   }
 
 
@@ -147,6 +161,7 @@ export class AppProvider extends React.Component {
           handleLocationFormSubmit: this.handleLocationFormSubmit,
           handleRequestLocation: this.handleRequestLocation,
           handleValidateAuth: this.handleValidateAuth,
+          getUserDetails: this.getUserDetails,
         }}
       >
         { this.props.children }
@@ -161,10 +176,11 @@ export function withAuth(Component) {
     return(
       <AppConsumer>
         {
-          ({ loggedIn, handleValidateAuth, }) => (
+          ({ loggedIn, handleValidateAuth, getUserDetails, }) => (
             <Component
               loggedIn={loggedIn}
               handleValidateAuth={handleValidateAuth}
+              getUserDetails={getUserDetails}
               {...props}
             />
           )
