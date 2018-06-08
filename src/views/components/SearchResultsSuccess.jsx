@@ -81,7 +81,7 @@ const styles = theme => ({
     padding: theme.spacing.unit * 2,
   },
   margin: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing.unit * 2,
   },
   headline: {
     fontWeight: theme.typography.fontWeightLight,
@@ -208,7 +208,6 @@ const SearchResultsSuccess = ({
                     </Button>
                   </div>
                   <div className={classes.buttonWrapper}>
-                    {console.log("SearchResultsSuccess: loggedIn: " + loggedIn)}
                     <Button
                       className={classes.button}
                       variant="outlined"
