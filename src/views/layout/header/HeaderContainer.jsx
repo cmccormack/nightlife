@@ -1,6 +1,7 @@
 import React, { Component, } from "react"
 import PropTypes from "prop-types"
 import IconButton from "@material-ui/core/IconButton"
+import queryString from "query-string"
 
 import { AppConsumer, } from "../../contexts/AppContext"
 import HeaderForm from "./HeaderForm"
@@ -10,6 +11,11 @@ class HeaderContainer extends Component {
 
   static propTypes = {
     loggedIn: PropTypes.bool.isRequired,
+    query: PropTypes.object,
+  }
+
+  static defaultProps = {
+    query: {},
   }
 
   render() {
@@ -23,7 +29,7 @@ class HeaderContainer extends Component {
         ? [
           <IconButton
             color="inherit"
-            href={`/auth/twitter${query}`}
+            href={`/auth/twitter?${queryString.stringify(query)}`}
             key="login"
           >
             <AccountCircle />
