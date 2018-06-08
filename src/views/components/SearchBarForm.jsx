@@ -71,7 +71,7 @@ class SearchBarForm extends React.Component {
                   variant="headline"
                   className={classes.headline}
                 >
-                  Enter Location or Find Me Automatically!
+                  Enter Location or Find It Automatically!
                 </Typography>
                 <FormControl
                   fullWidth
