@@ -86,7 +86,6 @@ class App extends React.Component {
   render() {
 
     const { classes, } = this.props
-    console.log(theme)
 
     return (
       <MuiThemeProvider theme={ theme }>
