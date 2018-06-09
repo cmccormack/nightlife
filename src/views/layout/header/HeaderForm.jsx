@@ -6,6 +6,7 @@ import Typography from "@material-ui/core/Typography"
 import IconButton from "@material-ui/core/IconButton"
 import Menu from "@material-ui/core/Menu"
 import MenuItem from "@material-ui/core/MenuItem"
+import Tooltip from "@material-ui/core/Tooltip"
 import Avatar from "@material-ui/core/Avatar"
 import queryString from "query-string"
 import AccountCircle from "@material-ui/icons/AccountCircle"
@@ -22,8 +23,11 @@ const styles = {
     flex: 1,
   },
   menu: {
-    top: "40px",
-    width: "200px",
+    top: "20px",
+  },
+  menuItem: {
+    width: 100,
+    justifyContent: "center",
   },
   textLink: {
     textDecoration: "none",
@@ -80,34 +84,43 @@ class HeaderForm extends Component {
     const items = (
 
       !loggedIn
-        ? [
-          <IconButton
-            color="inherit"
-            href={`/auth/twitter?${queryString.stringify(query)}`}
-            key="login"
-          >
-            <AccountCircle />
-          </IconButton>,
-        ]
-        : [
-          <Avatar
-            alt={displayName}
-            className={classes.avatar}
-            key={id}
-            onClick={this.handleMenuOpen}
-            src={profile_image}
-          />,
-          <Menu
-            key="menu"
-            anchorEl={anchorEl}
-            className={classes.menu}
-            open={Boolean(anchorEl)}
-            onClose={this.handleMenuClose}
-          >
-            <MenuItem onClick={this.handleMenuClose}>Logout</MenuItem>
-          </Menu>,
-          <a href="/auth/logout" key="logout">Log Out</a>,
-        ]
+        ? (
+          <React.Fragment>
+            <IconButton
+              color="inherit"
+              href={`/auth/twitter?${queryString.stringify(query)}`}
+            >
+              <Tooltip title="Log in with Twitter" placement="left">
+                <AccountCircle />
+              </Tooltip>
+            </IconButton>,
+          </React.Fragment>
+        )
+        : (
+          <React.Fragment>
+            <Avatar
+              alt={displayName}
+              className={classes.avatar}
+              onClick={this.handleMenuOpen}
+              src={profile_image}
+            />
+            <Menu
+              anchorEl={anchorEl}
+              className={classes.menu}
+              open={Boolean(anchorEl)}
+              onClose={this.handleMenuClose}
+            >
+              <a href="/auth/logout">
+                <MenuItem
+                  className={classes.menuItem}
+                  onClick={this.handleMenuClose}
+                >
+                  {"Logout"}
+                </MenuItem>
+              </a>
+            </Menu>
+          </React.Fragment>
+        )
     )
 
 
