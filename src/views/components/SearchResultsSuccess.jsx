@@ -2,6 +2,7 @@ import React from "react"
 import PropTypes from "prop-types"
 import Typography from "@material-ui/core/Typography"
 import Button from "@material-ui/core/Button"
+import Tooltip from "@material-ui/core/Tooltip"
 import ThumbUp from "@material-ui/icons/ThumbUp"
 import Star from "@material-ui/icons/Star"
 import StarHalf from "@material-ui/icons/StarHalf"
@@ -72,6 +73,9 @@ const styles = theme => ({
     "&:hover": {
       backgroundColor: theme.palette.secondary.light,
     },
+  },
+  gobuttondisabled: {
+
   },
   media: {
     flex: "0 1 auto",
@@ -185,7 +189,7 @@ const SearchResultsSuccess = ({
                     </a>
                   </Typography>
                   {
-                    Array(Math.floor(rating)).fill("").map((v,i) => (
+                    Array(~~rating).fill("").map((v,i) => (
                       <Star
                         className={cx(classes.icons, classes.star)}
                         key={i}
@@ -213,20 +217,30 @@ const SearchResultsSuccess = ({
                       </Typography>
                     </Button>
                   </div>
-                  <div className={classes.buttonWrapper}>
-                    <Button
-                      className={cx(classes.button, classes.gobutton)}
-                      variant="outlined"
-                      disabled={!loggedIn}
-                    >
-                      {"I Want To Go!"}
-                      <ThumbUp
-                        className={cx(classes.rightIcon, classes.iconSmall)}
+                  <Tooltip
+                    title={ !loggedIn
+                      ? "You must be logged in to perform that action"
+                      : ""
+                    }
+                    placement="left-start"
+                  >
+                    <div className={classes.buttonWrapper}>
+                      <Button
+                        className={
+                          cx(classes.button, {[classes.gobutton]: loggedIn,} )
+                        }
+                        variant="outlined"
+                        disabled={!loggedIn}
                       >
-                        {"thumbs_up"}
-                      </ThumbUp>
-                    </Button>
-                  </div>
+                        {"I Want To Go!"}
+                        <ThumbUp
+                          className={cx(classes.rightIcon, classes.iconSmall)}
+                        >
+                          {"thumbs_up"}
+                        </ThumbUp>
+                      </Button>
+                    </div>
+                  </Tooltip>
                 </div>
               </Card>
             </Grid>
