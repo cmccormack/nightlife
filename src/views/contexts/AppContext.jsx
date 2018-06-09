@@ -15,6 +15,7 @@ export class AppProvider extends React.Component {
     placeholder: "Enter your location",
     searchResults: [],
     query: this.props.query,
+    user: undefined,
   }
 
   static propTypes = {
@@ -32,7 +33,7 @@ export class AppProvider extends React.Component {
 
   componentDidMount() {
     this.fetchSearchResults()
-    console.log(this.state.query)
+    this.getUserDetails()
   }
 
 
@@ -51,7 +52,6 @@ export class AppProvider extends React.Component {
 
     if (!params["location"]) {
       if (!(params["latitude"] && params["longitude"])) {
-        console.error("Must provide location or GPS coordinates")
         return
       }
     }
@@ -72,7 +72,6 @@ export class AppProvider extends React.Component {
       }))
     }
 
-    console.log(params)
     const searchUrl = `/api/search?${queryString.stringify(params)}`
 
     try {
