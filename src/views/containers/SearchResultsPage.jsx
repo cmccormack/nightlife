@@ -60,6 +60,7 @@ const styles = theme => ({
     flex: "1 0 auto",
     flexDirection: "column",
     padding: theme.spacing.unit * 5,
+    marginBottom: 60,
   },
 })
 
