@@ -8,6 +8,10 @@ const userSchema = new mongoose.Schema({
     username: String,
     profile_image: String,
   },
+  going: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Location",
+  },],
 })
 
 const User = mongoose.model("User", userSchema, "users")
