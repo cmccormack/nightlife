@@ -114,7 +114,9 @@ const styles = theme => ({
 
 
 const SearchResultsSuccess = ({
+  buildDescription,
   classes,
+  handleGoing,
   loggedIn,
   searchResults,
 }) => {
@@ -135,6 +137,7 @@ const SearchResultsSuccess = ({
               
       {
         searchResults.map(({
+          alias,
           categories,
           id,
           image_url,
@@ -144,7 +147,13 @@ const SearchResultsSuccess = ({
           url,
         }) => {
 
-          const description = categories.map(c => c.title).join(", ")
+          const handleGoingClick = () => {
+            const location = {
+              alias,
+              id,
+            }
+            loggedIn && handleGoing(location)
+          }
 
           return (
             <Grid item xs={12} key={id}>
@@ -169,7 +178,7 @@ const SearchResultsSuccess = ({
                     </a>
                   </Typography>
                   <Typography variant="body1">
-                    <em>{description}</em>
+                    <em>{buildDescription(categories)}</em>
                   </Typography>
                   <Typography variant="body1">
                     <a 
@@ -229,8 +238,9 @@ const SearchResultsSuccess = ({
                         className={
                           cx(classes.button, {[classes.gobutton]: loggedIn,} )
                         }
-                        variant="outlined"
                         disabled={!loggedIn}
+                        onClick={handleGoingClick}
+                        variant="outlined"
                       >
                         {"I Want To Go!"}
                         <ThumbUp
@@ -252,7 +262,9 @@ const SearchResultsSuccess = ({
 }
 
 SearchResultsSuccess.propTypes = {
+  buildDescription: PropTypes.func,
   classes: PropTypes.object,
+  handleGoing: PropTypes.func,
   loggedIn: PropTypes.bool.isRequired,
   searchResults: PropTypes.array,
 }
