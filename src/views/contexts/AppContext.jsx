@@ -37,12 +37,13 @@ export class AppProvider extends React.Component {
   }
 
 
-  fetchJSON = (path, method="GET") => {
+  fetchJSON = (path, options) => {
     return fetch(
       path,
       {
-        method,
+        method: "GET",
         credentials: "include",
+        ...options,
       }
     ).then(res => res.json())
   }
@@ -147,7 +148,7 @@ export class AppProvider extends React.Component {
 
   // Check server to see if user is authenticated
   handleValidateAuth = async () => {
-    const {isauth,} = await this.fetchJSON("/isauth", "GET")
+    const {isauth,} = await this.fetchJSON("/isauth")
 
     this.setState({
       loggedIn: isauth,
@@ -166,6 +167,18 @@ export class AppProvider extends React.Component {
     return user
   }
 
+  buildDescription = (categories) => categories.map(c => c.title).join(", ")
+
+  handleGoing = async (id) => {
+    console.log(id)
+    const res = await this.fetchJSON("/api/app/going", {
+      method: "POST",
+      body: JSON.stringify(id),
+      headers: { "Content-Type": "application/json", },
+    })
+    console.log(res)
+  }
+
 
   render() {
 
@@ -173,12 +186,14 @@ export class AppProvider extends React.Component {
       <AppContext.Provider
         value={{
           ...this.state,
+          buildDescription: this.buildDescription,
+          getUserDetails: this.getUserDetails,
           handleGeolocate: this.handleGeolocate,
+          handleGoing: this.handleGoing,
           handleLocationChange: this.handleLocationChange,
           handleLocationFormSubmit: this.handleLocationFormSubmit,
           handleRequestLocation: this.handleRequestLocation,
           handleValidateAuth: this.handleValidateAuth,
-          getUserDetails: this.getUserDetails,
         }}
       >
         { this.props.children }
