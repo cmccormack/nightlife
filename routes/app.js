@@ -40,8 +40,22 @@ module.exports = () => {
   })
 
 
+  ///////////////////////////////////////////////////////////
+  // Return db entries based on received Location IDs
+  ///////////////////////////////////////////////////////////
+  router.post("/updatedresults", async (req, res, next) => {
+    const { resultIds, } = req.body
+
+    const updates = await Location.find({ id: { $in: resultIds,},})
+    console.log(updates)
+    res.json({success: true, updates,})
+  })
+
 
   /* Add validator later */
+  ///////////////////////////////////////////////////////////
+  // Update Location and User models with 'going' status
+  ///////////////////////////////////////////////////////////
   router.post("/going", async (req, res, next) => {
 
     if (!req.body) {
@@ -51,17 +65,17 @@ module.exports = () => {
     if (!req.user) {
       return next(Error("Must be logged in to perform this action"))
     }
-
-    const { id:locationId, alias, } = req.body
+    const { id, alias, } = req.body.location
     const { _id: userId, } = req.user
+
 
     try {
       const user = await User.findById(userId)
       if (!user) throw new Error(`No user found matching ID ${userId}`)
 
-      const location = await Location.findOne({id: locationId,}) ||
+      const location = await Location.findOne({id,}) ||
         await new Location({
-          id: locationId,
+          id,
           alias,
           going: [],
         }).save()
@@ -74,7 +88,7 @@ module.exports = () => {
         user.going.push(location._id)
         location.going.push(user._id)
       } else {
-        // Remove location from Models
+        // Remove location from User going array if user not going
         user.going = [
           ...user.going.slice(0, locationIndex),
           ...user.going.slice(locationIndex + 1),
@@ -85,7 +99,7 @@ module.exports = () => {
           ...location.going.slice(userIndex + 1),
         ]
       }
-      
+
       await user.save()
       await location.save()
 
@@ -94,11 +108,12 @@ module.exports = () => {
         await Location.deleteOne({_id: location._id,})
       }
 
+      res.json({ success: true, going: user.going,})
+
     } catch(err) {
       return next(err)
     }
 
-    res.json(req.body)
 
   })
 
