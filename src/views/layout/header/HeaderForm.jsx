@@ -93,7 +93,7 @@ class HeaderForm extends Component {
               <Tooltip title="Log in with Twitter" placement="left">
                 <AccountCircle />
               </Tooltip>
-            </IconButton>,
+            </IconButton>
           </React.Fragment>
         )
         : (
