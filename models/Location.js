@@ -1,10 +1,18 @@
 const mongoose = require("mongoose")
 
 const locationSchema = new mongoose.Schema({
-  _id: {type: String, required: true, },
-  name: {type: String, required: true, },
-  going: {type: Number, required: true, },
+  id: {type: String, required: true, },
+  alias: {type: String, },
+  going: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },],
 })
+
+locationSchema.methods.goingCount = function() {
+  console.log("location.going.length: " + this.going.length)
+  return this.going.length
+}
 
 const Location = mongoose.model("Location", locationSchema, "locations")
 
