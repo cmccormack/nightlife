@@ -169,13 +169,23 @@ export class AppProvider extends React.Component {
 
   buildDescription = (categories) => categories.map(c => c.title).join(", ")
 
-  handleGoing = async (id) => {
-    console.log(id)
+  handleGoing = async (location) => {
     const res = await this.fetchJSON("/api/app/going", {
       method: "POST",
-      body: JSON.stringify(id),
+      body: JSON.stringify({location,}),
       headers: { "Content-Type": "application/json", },
     })
+    this.updateResults()
+  }
+
+  updateResults = async () => {
+    const resultIds = this.state.searchResults.map(v => v.id)
+    const res = await this.fetchJSON("/api/app/updatedresults", {
+      method: "POST",
+      body: JSON.stringify({ resultIds, }),
+      headers: { "Content-Type": "application/json", },
+    })
+
     console.log(res)
   }
 
