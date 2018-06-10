@@ -1,4 +1,5 @@
 import React from "react"
+import PropTypes from "prop-types"
 import Paper from "@material-ui/core/Paper"
 import withStyles from "@material-ui/core/styles/withStyles"
 
@@ -64,20 +65,25 @@ const styles = theme => ({
   },
 })
 
+
 class SearchResultsPage extends React.Component {
+
+  static propTypes = {
+    classes: PropTypes.object,
+  }
 
   render() {
 
     const { classes, } = this.props
     return(
       <AppConsumer>
-        {({
-          searchResults,
-        }) => (
+        {(app) => (
           <Paper className={classes.paper}>
             {
-              searchResults.length > 0
-                ? <SearchResultsSuccess searchResults={ searchResults } />
+              app.searchResults.length > 0
+                ? <SearchResultsSuccess
+                  {...app}
+                />
                 : <SearchResultsForm />
             }
           </Paper>
