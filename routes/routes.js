@@ -1,6 +1,8 @@
 const path = require("path")
 const express = require("express")
 
+const Location = require("../models/Location")
+
 module.exports = (app, passport) => {
 
   const root = path.resolve(__dirname, "..")
@@ -21,6 +23,7 @@ module.exports = (app, passport) => {
   ///////////////////////////////////////////////////////////
   const searchRouter = require("./yelp")()
   const authRouter = require("./twitter")(passport)
+  const appRouter = require("./app")()
 
 
   ///////////////////////////////////////////////////////////
@@ -38,11 +41,15 @@ module.exports = (app, passport) => {
     res.json({ isauth: req.isAuthenticated(), })
   })
 
-
-
   app.get("/user", (req, res, next) => {
     res.json(req.user.twitter)
   })
+
+
+  ///////////////////////////////////////////////////////////
+  // App API
+  ///////////////////////////////////////////////////////////
+  app.use("/api/app", appRouter)
 
 
   ///////////////////////////////////////////////////////////
