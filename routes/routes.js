@@ -1,5 +1,6 @@
 const path = require("path")
 const express = require("express")
+const queryString = require("query-string")
 
 const Location = require("../models/Location")
 
@@ -75,7 +76,7 @@ module.exports = (app, passport) => {
   ///////////////////////////////////////////////////////////
   /* eslint no-unused-vars: 0 */
   app.use((err, req, res, next) => {
-
+    const query = queryString.stringify(req.query)
     const errmsg = (err.message ? err.message : err).replace("Error: ", "")
 
     console.error(`Error Middleware: ${errmsg}`)
@@ -83,6 +84,7 @@ module.exports = (app, passport) => {
       success: false,
       message: errmsg,
       error: err,
+      path: `${req.path}${query && `?${query}`}`,
     })
   })
 
