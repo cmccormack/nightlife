@@ -69,7 +69,6 @@ module.exports = () => {
       const locationIndex = user.going.indexOf(location._id)
       const userIndex = location.going.indexOf(user._id)
 
-      console.log(location)
       // Add location to user.going if user is going
       if (locationIndex === -1) {
         user.going.push(location._id)
