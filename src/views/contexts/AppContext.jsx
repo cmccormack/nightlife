@@ -31,7 +31,7 @@ export class AppProvider extends React.Component {
     },
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.fetchSearchResults()
     this.getUserDetails()
   }
@@ -96,10 +96,12 @@ export class AppProvider extends React.Component {
         searchResults: response.jsonBody.businesses,
         query: {location: `${city},+${state}`, },
       })
-
+      
       // Add the location to the query parameters
       const { query, } = this.state
       history.pushState({}, null, `/?${queryString.stringify(query)}`)
+      
+      await this.updateResultsFromDb()
 
     } catch(error) { console.error }
   }
@@ -170,23 +172,33 @@ export class AppProvider extends React.Component {
   buildDescription = (categories) => categories.map(c => c.title).join(", ")
 
   handleGoing = async (location) => {
-    const res = await this.fetchJSON("/api/app/going", {
+    await this.fetchJSON("/api/app/going", {
       method: "POST",
       body: JSON.stringify({location,}),
       headers: { "Content-Type": "application/json", },
     })
-    this.updateResults()
+    this.updateResultsFromDb()
   }
 
-  updateResults = async () => {
-    const resultIds = this.state.searchResults.map(v => v.id)
-    const res = await this.fetchJSON("/api/app/updatedresults", {
+  updateResultsFromDb = async () => {
+    const { searchResults, } = this.state
+    const resultIds = searchResults.map(v => v.id)
+    const {updates,} = await this.fetchJSON("/api/app/updatedresults", {
       method: "POST",
       body: JSON.stringify({ resultIds, }),
       headers: { "Content-Type": "application/json", },
     })
 
-    console.log(res)
+    const updateIds = updates.map(v=>v.id)
+
+    const updatedResults = searchResults.map(result => {
+      const resultIndex = updateIds.indexOf(result.id)
+      if (resultIndex !== -1) {
+        return Object.assign(result, { going: updates[resultIndex].going,})
+      }
+      return Object.assign(result, { going: [], })
+    })
+    this.setState({ searchResults: updatedResults, })
   }
 
 
