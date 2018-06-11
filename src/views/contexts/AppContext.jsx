@@ -15,7 +15,7 @@ export class AppProvider extends React.Component {
     placeholder: "Enter your location",
     searchResults: [],
     query: this.props.query,
-    user: undefined,
+    user: {_id: null, twitter: {},},
   }
 
   static propTypes = {
