@@ -119,6 +119,7 @@ const SearchResultsSuccess = ({
   handleGoing,
   loggedIn,
   searchResults,
+  user,
 }) => {
 
   const placeholderImage = "/images/placeholder.jpg"
@@ -139,6 +140,7 @@ const SearchResultsSuccess = ({
         searchResults.map(({
           alias,
           categories,
+          going=[],
           id,
           image_url,
           location,
@@ -146,6 +148,8 @@ const SearchResultsSuccess = ({
           rating,
           url,
         }) => {
+          
+          const userGoing = going.map(({_id,}) => _id).includes(user._id)
 
           const handleGoingClick = () => {
             const location = {
@@ -222,7 +226,7 @@ const SearchResultsSuccess = ({
                       variant="outlined"
                     >
                       <Typography variant="button">
-                        {"0 People Going"}
+                        {`${going.length} ${going.length === 1 ? "Person" : "People"} Going`}
                       </Typography>
                     </Button>
                   </div>
@@ -242,7 +246,7 @@ const SearchResultsSuccess = ({
                         onClick={handleGoingClick}
                         variant="outlined"
                       >
-                        {"I Want To Go!"}
+                        {userGoing ? "I'm Going!" : "I Want To Go!"}
                         <ThumbUp
                           className={cx(classes.rightIcon, classes.iconSmall)}
                         >
