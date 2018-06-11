@@ -43,7 +43,7 @@ module.exports = (app, passport) => {
   })
 
   app.get("/user", (req, res, next) => {
-    res.json(req.user.twitter)
+    res.json(req.user)
   })
 
 
