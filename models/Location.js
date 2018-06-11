@@ -9,9 +9,11 @@ const locationSchema = new mongoose.Schema({
   },],
 })
 
-locationSchema.methods.goingCount = function() {
-  console.log("location.going.length: " + this.going.length)
-  return this.going.length
+
+
+locationSchema.statics.updateResults = function(results) {
+  return this.find({ id: { $in: results, }, })
+    .populate("going", "twitter.displayName")
 }
 
 const Location = mongoose.model("Location", locationSchema, "locations")

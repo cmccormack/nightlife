@@ -44,10 +44,11 @@ module.exports = () => {
   // Return db entries based on received Location IDs
   ///////////////////////////////////////////////////////////
   router.post("/updatedresults", async (req, res, next) => {
-    const { resultIds, } = req.body
+    if (!req.body) return next(Error("Must supply array of locations"))
 
-    const updates = await Location.find({ id: { $in: resultIds,},})
-    console.log(updates)
+    const { resultIds, } = req.body
+    const updates = await Location.updateResults(resultIds)
+
     res.json({success: true, updates,})
   })
 
