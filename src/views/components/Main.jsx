@@ -5,8 +5,9 @@ import Typography from "@material-ui/core/Typography"
 import withStyles from "@material-ui/core/styles/withStyles"
 import cx from "classnames"
 
-import SearchBarPage from "../containers/SearchBarPage"
-import SearchResultsPage from "../containers/SearchResultsPage"
+import SearchBar from "../SearchBar"
+import SearchResults from "../SearchResults"
+console.log(SearchResults)
 
 const styles = theme => ({
   main: {
@@ -36,10 +37,10 @@ class Main extends React.Component {
           spacing={24}
         >
           <Grid item xs={12}>
-            <SearchBarPage />
+            <SearchBar />
           </Grid>
           <Grid item xs={12}>
-            <SearchResultsPage />
+            <SearchResults />
           </Grid>
         </Grid>
       </main>
