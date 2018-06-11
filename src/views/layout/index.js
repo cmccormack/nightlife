@@ -1,8 +1,2 @@
-import Footer from "./footer"
-import Header from "./header"
-
-export { Link, SocialLink, TextLink, } from "./Link"
-export {
-  Footer,
-  Header,
-}
+export {default as Header} from "./header"
+export {default as Footer} from "./footer"
