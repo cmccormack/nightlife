@@ -1,13 +1,9 @@
 import React from "react"
 import Grid from "@material-ui/core/Grid"
-import Paper from "@material-ui/core/Paper"
-import Typography from "@material-ui/core/Typography"
 import withStyles from "@material-ui/core/styles/withStyles"
-import cx from "classnames"
 
 import SearchBar from "../SearchBar"
 import SearchResults from "../SearchResults"
-console.log(SearchResults)
 
 const styles = theme => ({
   main: {
@@ -27,7 +23,7 @@ class Main extends React.Component {
 
   render() {
 
-    const { children, classes, } = this.props
+    const { classes, } = this.props
     return (
       <main className={ classes.main }>
         <Grid
