@@ -11,8 +11,11 @@ const styles = theme => ({
   paper: {
     flex: "1 0 auto",
     flexDirection: "column",
-    padding: theme.spacing.unit * 5,
+    padding: theme.spacing.unit,
     marginBottom: 60,
+    [theme.breakpoints.up("sm")]: {
+      padding: theme.spacing.unit * 5,
+    },
   },
 })
 
