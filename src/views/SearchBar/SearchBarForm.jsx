@@ -10,6 +10,7 @@ import InputLabel from "@material-ui/core/InputLabel"
 import IconButton from "@material-ui/core/IconButton"
 import GpsNotFixed from "@material-ui/icons/GpsNotFixed"
 import GpsFixed from "@material-ui/icons/GpsFixed"
+import CircularProgress from "@material-ui/core/CircularProgress"
 import withStyles from "@material-ui/core/styles/withStyles"
 import cx from "classnames"
 
@@ -37,6 +38,13 @@ const styles = theme => ({
   textField: {
     flexBasis: 450,
   },
+  fabProgress: {
+    color: theme.palette.secondary.light,
+    position: 'absolute',
+    top: 4,
+    left: 4,
+    zIndex: 1,
+  },
 })
 
 class SearchBarForm extends React.Component {
@@ -52,6 +60,7 @@ class SearchBarForm extends React.Component {
       handleGeolocate,
       handleLocationChange,
       handleLocationFormSubmit,
+      loading,
       location,
       locationFound,
       placeholder,
@@ -88,9 +97,14 @@ class SearchBarForm extends React.Component {
                       aria-label="Request GPS Location"
                       onClick={handleGeolocate}
                       disabled={ "navigator" in navigator }
-                      // onMouseDown={this.handleMouseDownPassword}
                     >
                       { locationFound ? <GpsFixed /> : <GpsNotFixed /> }
+                      { loading && (
+                        <CircularProgress
+                          className={classes.fabProgress}
+                          size={40}
+                        />
+                      )}
                     </IconButton>
                   </InputAdornment>
                 }
