@@ -11,7 +11,6 @@ const styles = theme => ({
     flex: "1 0 auto",
     marginTop: "60px",
     justifyContent: "center",
-    // overflow: "hidden",
   },
   container: {
     [theme.breakpoints.up("lg")]: {
@@ -36,7 +35,6 @@ class Main extends React.Component {
 
   render() {
     const { classes, } = this.props
-    console.log(classes)
     return (
       <main className={ classes.main }>
         <div className={ classes.wrapper }>
