@@ -32,9 +32,14 @@ export class AppProvider extends React.Component {
     },
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.fetchSearchResults()
     this.getUserDetails()
+  }
+
+  componentDidUpdate() {
+    const { query, } = this.state
+    history.pushState({}, null, `/?${queryString.stringify(query)}`)
   }
 
 
@@ -50,13 +55,15 @@ export class AppProvider extends React.Component {
   }
 
 
-  fetchSearchResults = async (params=this.state.query, updateLocation=true) => {
-
+  fetchSearchResults = (params=this.state.query, updateLocation=true) => {
+    
     if (!params["location"]) {
       if (!(params["latitude"] && params["longitude"])) {
         return
       }
     }
+
+    const searchUrl = `/api/search?${queryString.stringify(params)}`
 
     const updateState = ({
       locationFound,
@@ -68,43 +75,47 @@ export class AppProvider extends React.Component {
       this.setState(prevState => ({
         location: updateLocation ? location : prevState.location,
         locationFound: locationFound || prevState.locationFound,
-        query: Object.assign(query, prevState.query),
+        query: Object.assign(prevState.query, query),
         placeholder,
         ...rest,
       }))
     }
 
-    const searchUrl = `/api/search?${queryString.stringify(params)}`
+    return new Promise( async (resolve, reject) => {
 
-    try {
-      const { response, success, } = await this.fetchJSON(searchUrl)
+      try {
 
-      if (!success) {
-        switch(response.error.code) {
-          case "LOCATION_NOT_FOUND":
-            updateState({placeholder: "Location Not Found",})
+        const { response, success, } = await this.fetchJSON(searchUrl)
+  
+        if (!success) {
+          switch(response.error.code) {
+            case "LOCATION_NOT_FOUND":
+              updateState({placeholder: "Location Not Found",})
+          }
+          console.error(response.error.description)
+          return resolve(response.error)
         }
-        return console.error(response.error.description)
+  
+        if (response.jsonBody.businesses.length === 0) {
+          updateState("No Results Found in Your Area")
+          return resolve("fetchSearchResults No Results Found")
+        }
+  
+        const { city, state, } = response.jsonBody.businesses[0].location
+
+        updateState({
+          location: `${city}, ${state}`,
+          searchResults: response.jsonBody.businesses,
+          query: {location: `${city},+${state}`, },
+        })
+
+        this.updateResultsFromDb()
+  
+        resolve("fetchSearchResults Successful")
+      } catch(error) { 
+        reject(error)
       }
-
-      if (response.jsonBody.businesses.length === 0) {
-        return updateState("No Results Found in Your Area")
-      }
-
-      const { city, state, } = response.jsonBody.businesses[0].location
-      await updateState({
-        location: `${city}, ${state}`,
-        searchResults: response.jsonBody.businesses,
-        query: {location: `${city},+${state}`, },
-      })
-      
-      // Add the location to the query parameters
-      const { query, } = this.state
-      history.pushState({}, null, `/?${queryString.stringify(query)}`)
-      
-      await this.updateResultsFromDb()
-
-    } catch(error) { console.error }
+    })
   }
 
 
@@ -126,26 +137,31 @@ export class AppProvider extends React.Component {
   }
 
 
-  handleGeolocate = async e => {
-    e.preventDefault()
+  handleGeolocate = () => {
+    return new Promise((resolve, reject) => {
 
-    const handleSuccess = ({ coords: { latitude, longitude, },}) => {
+      const handleSuccess = async ({ coords: { latitude, longitude, },}) => {
+  
+        await this.setState(prevState => ({
+          locationFound: true,
+          query: Object.assign({
+            latitude: latitude.toFixed(2),
+            longitude: longitude.toFixed(2),
+          }, prevState.query),
+        }))
+  
+        this.fetchSearchResults()
+        resolve("handleGeolocate Successful")
+      }
+  
+      const handleFailure = error => {
+        console.error(error)
+        reject(error)
+      }
+  
+      navigator.geolocation.getCurrentPosition(handleSuccess, handleFailure)
 
-      this.setState(prevState => ({
-        locationFound: true,
-        query: Object.assign({
-          latitude: latitude.toFixed(2),
-          longitude: longitude.toFixed(2),
-        }, prevState.query),
-      }), this.fetchSearchResults)
-      
-    }
-
-    const handleFailure = error => {
-      console.error(error)
-    }
-
-    navigator.geolocation.getCurrentPosition(handleSuccess, handleFailure)
+    })
   }
 
 
@@ -205,7 +221,7 @@ export class AppProvider extends React.Component {
         })
         this.setState({ searchResults: updatedResults, })
 
-        resolve("update successful")
+        resolve("updateResultsFromDb Successful")
 
       } catch (err) {
         reject(err)
