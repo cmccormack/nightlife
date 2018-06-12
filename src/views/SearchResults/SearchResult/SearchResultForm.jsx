@@ -60,6 +60,9 @@ const styles = theme => ({
       flexDirection: "row",
       width: "100%",
     },
+    [theme.breakpoints.down("xs")]: {
+      flexDirection: "column",
+    },
     order: 2,
   },
   button: {
@@ -185,12 +188,14 @@ class SearchResultForm extends React.Component {
     const usersGoing = going.map(user => user.twitter.displayName)
     
     const cardImage = (
+
       <CardMedia
         className={classes.media}
         image={image_url || placeholderImagePath}
         title={name}
       />
     )
+
     const cardContent = (
       <CardContent className={classes.content}>
         <Typography variant="title">
