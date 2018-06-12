@@ -31,7 +31,7 @@ export default class SearchResultPage extends React.Component {
   handleGoingClick = async () => {
     
     const { loggedIn, handleGoing, result, } = this.props
-    if (!loggedIn) return
+    if (!loggedIn || this.state.loading) return
 
     const { alias, id, } = result
     const location = { alias, id, }
