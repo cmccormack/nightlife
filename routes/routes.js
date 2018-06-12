@@ -1,8 +1,6 @@
 const path = require("path")
-const express = require("express")
 const queryString = require("query-string")
 
-const Location = require("../models/Location")
 
 module.exports = (app, passport) => {
 
