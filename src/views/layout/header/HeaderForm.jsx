@@ -75,7 +75,7 @@ class HeaderForm extends Component {
   render() {
 
     const { classes, loggedIn, query, } = this.props
-    const { id, profile_image, displayName, } = this.props.user.twitter
+    const { profile_image, displayName, } = this.props.user.twitter
 
     const { anchorEl, } = this.state
 
