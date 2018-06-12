@@ -40,7 +40,7 @@ const styles = theme => ({
   },
   fabProgress: {
     color: theme.palette.secondary.light,
-    position: 'absolute',
+    position: "absolute",
     top: 4,
     left: 4,
     zIndex: 1,
@@ -51,6 +51,19 @@ class SearchBarForm extends React.Component {
 
   static propTypes = {
     classes: PropTypes.object,
+    handleGeolocate: PropTypes.func.isRequired,
+    handleLocationChange: PropTypes.func.isRequired,
+    handleLocationFormSubmit: PropTypes.func.isRequired,
+    loading: PropTypes.bool.isRequired,
+    location: PropTypes.string,
+    locationFound: PropTypes.bool.isRequired,
+    placeholder: PropTypes.string,
+  }
+
+  static defaultProps = {
+    classes: {},
+    location: "",
+    placeholder: "",
   }
 
   render() {
