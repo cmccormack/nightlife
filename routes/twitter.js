@@ -39,7 +39,7 @@ module.exports = (passport) => {
 
   // Twitter response failed
   router.get("/twitter/fail", (req, res) => {
-    res.send("<h1>Failed to Log in via Twitter</h1>")
+    res.redirect("/")
   })
 
 
