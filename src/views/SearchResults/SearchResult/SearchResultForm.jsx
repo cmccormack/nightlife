@@ -8,6 +8,7 @@ import Tooltip from "@material-ui/core/Tooltip"
 import Menu from "@material-ui/core/Menu"
 import MenuItem from "@material-ui/core/MenuItem"
 import ThumbUp from "@material-ui/icons/ThumbUp"
+import Done from "@material-ui/icons/Done"
 import Star from "@material-ui/icons/Star"
 import StarHalf from "@material-ui/icons/StarHalf"
 import LocationOn from "@material-ui/icons/LocationOn"
@@ -296,11 +297,24 @@ class SearchResultForm extends React.Component {
               variant="outlined"
             >
               {userGoing ? "I'm Going!" : "I Want To Go!"}
-              <ThumbUp
-                className={cx(classes.rightIcon, classes.iconSmall)}
-              >
-                {"thumbs_up"}
-              </ThumbUp>
+              {userGoing
+                ?
+                (
+                  <Done
+                    className={cx(classes.rightIcon, classes.iconSmall)}
+                  >
+                    {"going"}
+                  </Done>
+                )
+                :
+                (
+                  <ThumbUp
+                    className={cx(classes.rightIcon, classes.iconSmall)}
+                  >
+                    {"thumbs_up"}
+                  </ThumbUp>
+                )
+              }
               { loading && 
                 <CircularProgress
                   className={classes.buttonProgress}
