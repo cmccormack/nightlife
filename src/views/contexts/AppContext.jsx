@@ -13,6 +13,7 @@ export class AppProvider extends React.Component {
     locationFound: false,
     location: this.props.query.location,
     placeholder: "Enter your location",
+    placeholderImagePath: "/images/placeholder.jpg",
     searchResults: [],
     query: this.props.query,
     user: {_id: null, twitter: {},},
@@ -177,28 +178,40 @@ export class AppProvider extends React.Component {
       body: JSON.stringify({location,}),
       headers: { "Content-Type": "application/json", },
     })
-    this.updateResultsFromDb()
+    return this.updateResultsFromDb()
+
   }
 
-  updateResultsFromDb = async () => {
+  updateResultsFromDb = () => {
     const { searchResults, } = this.state
     const resultIds = searchResults.map(v => v.id)
-    const {updates,} = await this.fetchJSON("/api/app/updatedresults", {
-      method: "POST",
-      body: JSON.stringify({ resultIds, }),
-      headers: { "Content-Type": "application/json", },
-    })
+    return new Promise( async (resolve, reject) => {
+      
+      try {
+        const {updates,} = await this.fetchJSON("/api/app/updatedresults", {
+          method: "POST",
+          body: JSON.stringify({ resultIds, }),
+          headers: { "Content-Type": "application/json", },
+        })
+    
+        const updateIds = updates.map(v=>v.id)
+    
+        const updatedResults = searchResults.map(result => {
+          const resultIndex = updateIds.indexOf(result.id)
+          if (resultIndex !== -1) {
+            return Object.assign(result, { going: updates[resultIndex].going,})
+          }
+          return Object.assign(result, { going: [], })
+        })
+        this.setState({ searchResults: updatedResults, })
 
-    const updateIds = updates.map(v=>v.id)
+        resolve("update successful")
 
-    const updatedResults = searchResults.map(result => {
-      const resultIndex = updateIds.indexOf(result.id)
-      if (resultIndex !== -1) {
-        return Object.assign(result, { going: updates[resultIndex].going,})
+      } catch (err) {
+        reject(err)
       }
-      return Object.assign(result, { going: [], })
+
     })
-    this.setState({ searchResults: updatedResults, })
   }
 
 
