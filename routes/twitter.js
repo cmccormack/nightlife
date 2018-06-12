@@ -1,6 +1,7 @@
 const router = require("express").Router()
 const queryString = require("query-string")
-
+const path = require("path")
+require("dotenv").config({path: path.resolve(__dirname, ".env"), })
 
 module.exports = (passport) => {
 
@@ -12,8 +13,9 @@ module.exports = (passport) => {
 
   // Route to authenticate via Twitter API
   router.get("/twitter", (req, res, next) => {
+    const { callbackURL, } = process.env
     passport.authenticate("twitter", {
-      callbackURL: `/auth/twitter/callback?${queryString.stringify(req.query)}`,
+      callbackURL: `${callbackURL}?${queryString.stringify(req.query)}`,
     })(req, res, next)
   })
 
