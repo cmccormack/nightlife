@@ -13,7 +13,7 @@ module.exports = (passport) => {
 
   // Route to authenticate via Twitter API
   router.get("/twitter", (req, res, next) => {
-    const { callbackURL, } = process.env
+    const { callbackURL="/", } = process.env
     passport.authenticate("twitter", {
       callbackURL: `${callbackURL}?${queryString.stringify(req.query)}`,
     })(req, res, next)
