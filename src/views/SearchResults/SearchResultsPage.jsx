@@ -35,7 +35,6 @@ class SearchResultsPage extends React.Component {
       </Paper>
     )
   }
-
 }
 
 export default withStyles(styles)(SearchResultsPage)
