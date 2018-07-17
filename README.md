@@ -1,6 +1,6 @@
 # Build a Nightlife Coordination App
 
-Full stack JavaScript app to coordinate nightlife activies in your area  [Try it out](https://meetuptonight.glitch.me/)
+Full stack JavaScript app to coordinate nightlife activies in your area  [Try it out](https://meetuptonight.mackville.net/)
 
 **Objective:** Build a full stack JavaScript app that is functionally similar to [this](https://yasser-nightlife-app.herokuapp.com/).
 
