@@ -64,3 +64,6 @@ public/
 
 # ignore os files
 .DS_Store
+
+# Backups
+backups/
